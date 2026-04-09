@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Arcarsu | Panel Admin</title>
+    <meta name="description" content="Panel administrativo de Arcarsu para gestionar pedidos y articulos." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body data-page="admin">
+    <div class="page-shell">
+      <header class="site-header">
+        <div class="header-inner">
+          <a class="brand" href="./index.html" aria-label="Arcarsu inicio">
+            <span class="brand-title">Arcarsu</span>
+            <span class="brand-subtitle">Panel administrativo</span>
+          </a>
+
+          <div class="header-tools">
+            <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+            <div class="account-area">
+              <div class="notifications-area">
+                <button class="notifications-toggle" type="button" aria-expanded="false" aria-controls="notifications-panel" aria-label="Notificaciones">
+                  <span class="notifications-toggle-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" role="img" focusable="false">
+                      <path d="M12 22a2.6 2.6 0 0 0 2.5-2h-5A2.6 2.6 0 0 0 12 22Zm7-5h-1V11a6 6 0 1 0-12 0v6H5a1 1 0 1 0 0 2h14a1 1 0 1 0 0-2Z"></path>
+                    </svg>
+                  </span>
+                  <span class="notifications-count" data-notifications-count>3</span>
+                </button>
+                <div class="notifications-panel" id="notifications-panel" hidden>
+                  <span class="account-panel-label">Notificaciones</span>
+                  <div class="notifications-list">
+                    <article class="notification-item notification-success">
+                      <strong>Pedido completado</strong>
+                      <p>Se registro un pedido como completado y listo para entrega.</p>
+                    </article>
+                    <article class="notification-item notification-warning">
+                      <strong>Problema con pedido</strong>
+                      <p>Un pedido necesita revision manual por stock o datos de entrega.</p>
+                    </article>
+                    <article class="notification-item notification-info">
+                      <strong>Nuevo ingreso</strong>
+                      <p>Tenes movimientos recientes en pedidos y administracion.</p>
+                    </article>
+                  </div>
+                </div>
+              </div>
+              <button class="account-toggle" type="button" aria-expanded="false" aria-controls="account-panel" aria-label="Mi cuenta">
+                <span class="account-toggle-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" role="img" focusable="false">
+                    <path d="M12 12a4.2 4.2 0 1 0 0-8.4 4.2 4.2 0 0 0 0 8.4Zm0 2.1c-4.55 0-8.25 2.48-8.25 5.55 0 .41.34.75.75.75h15a.75.75 0 0 0 .75-.75c0-3.07-3.7-5.55-8.25-5.55Z"></path>
+                  </svg>
+                </span>
+                <span class="account-toggle-text" data-account-trigger-text>Iniciar sesion</span>
+              </button>
+              <div class="account-panel" id="account-panel" hidden>
+                <div class="account-panel-user" data-account-user hidden>
+                  <span class="account-panel-label">Mi cuenta</span>
+                  <strong data-account-name>Cliente Arcarsu</strong>
+                  <div class="account-links">
+                    <a href="./admin.html" data-admin-link hidden>Panel admin</a>
+                    <a href="./checkout.html">Pedidos</a>
+                    <a href="./contacto.html">Ayuda y soporte</a>
+                    <button class="account-logout" type="button">Cerrar sesion</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <nav class="site-nav site-nav-top" id="site-nav" aria-label="Principal">
+            <a href="./index.html">Inicio</a>
+            <a href="./tazas.html">Tazas</a>
+            <a href="./mdf.html">MDF</a>
+            <a href="./contacto.html">Contacto</a>
+          </nav>
+        </div>
+      </header>
+
+      <main>
+        <section class="admin-shell">
+          <div class="section-intro">
+            <span class="eyebrow">Admin</span>
+            <h2>Panel para gestionar pedidos y articulos.</h2>
+            <p>Acceso reservado para la cuenta administradora. Luego solo reemplazamos el correo permitido.</p>
+          </div>
+
+          <article class="admin-gate" id="admin-gate">
+            <span class="eyebrow">Acceso restringido</span>
+            <h3>Este panel solo esta disponible para la cuenta admin.</h3>
+            <p>Cuando me pases el correo correcto lo dejamos asignado y visible solo para ese usuario.</p>
+          </article>
+
+          <div class="admin-content" id="admin-content" hidden>
+            <section class="admin-stats">
+              <article class="admin-stat-card">
+                <span class="eyebrow">Pedidos</span>
+                <strong id="admin-orders-count">0</strong>
+                <p>Total de pedidos registrados desde checkout.</p>
+              </article>
+              <article class="admin-stat-card">
+                <span class="eyebrow">Pendientes</span>
+                <strong id="admin-pending-count">0</strong>
+                <p>Pedidos que aun necesitan gestion o cierre.</p>
+              </article>
+              <article class="admin-stat-card">
+                <span class="eyebrow">Articulos</span>
+                <strong id="admin-products-count">0</strong>
+                <p>Articulos cargados desde este panel administrativo.</p>
+              </article>
+            </section>
+
+            <section class="admin-grid">
+              <article class="admin-card">
+                <div class="admin-card-head">
+                  <span class="eyebrow">Pedidos</span>
+                  <h3>Gestion de pedidos</h3>
+                </div>
+                <div class="admin-orders-list" id="admin-orders"></div>
+              </article>
+
+              <article class="admin-card">
+                <div class="admin-card-head">
+                  <span class="eyebrow">Catalogo</span>
+                  <h3>Agregar o quitar articulos</h3>
+                </div>
+                <form class="admin-form" id="admin-product-form">
+                  <div class="field">
+                    <label for="admin-product-name">Nombre</label>
+                    <input id="admin-product-name" name="name" type="text" placeholder="Nombre del articulo" required />
+                  </div>
+                  <div class="field">
+                    <label for="admin-product-category">Categoria</label>
+                    <input id="admin-product-category" name="category" type="text" placeholder="Tazas, MDF, cofres, cajas..." required />
+                  </div>
+                  <div class="field">
+                    <label for="admin-product-material">Material</label>
+                    <input id="admin-product-material" name="material" type="text" placeholder="Ceramica, MDF 3 mm..." required />
+                  </div>
+                  <div class="field">
+                    <label for="admin-product-measure">Medidas</label>
+                    <input id="admin-product-measure" name="measure" type="text" placeholder="11 oz, 12 x 12 cm..." required />
+                  </div>
+                  <div class="admin-form-grid">
+                    <div class="field">
+                      <label for="admin-product-price24">Precio x24</label>
+                      <input id="admin-product-price24" name="price24" type="number" min="0" placeholder="0" required />
+                    </div>
+                    <div class="field">
+                      <label for="admin-product-price48">Precio x48</label>
+                      <input id="admin-product-price48" name="price48" type="number" min="0" placeholder="0" required />
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label for="admin-product-image">Imagen</label>
+                    <input id="admin-product-image" name="image" type="text" placeholder="./assets/..." />
+                  </div>
+                  <button class="button button-dark" type="submit">Agregar articulo</button>
+                </form>
+                <div class="admin-products-list" id="admin-products-list"></div>
+              </article>
+            </section>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <div class="footer-grid">
+          <div>
+            <a class="brand brand-footer" href="./index.html" aria-label="Arcarsu inicio">
+              <span class="brand-title">Arcarsu</span>
+              <span class="brand-subtitle">Panel interno para gestion comercial.</span>
+            </a>
+          </div>
+          <div class="footer-links">
+            <h3>Navegacion</h3>
+            <a href="./index.html">Inicio</a>
+            <a href="./tazas.html">Tazas</a>
+            <a href="./mdf.html">MDF</a>
+            <a href="./contacto.html">Contacto</a>
+          </div>
+          <div class="footer-links">
+            <h3>Acceso</h3>
+            <span>Cuenta admin restringida</span>
+            <span>Correo editable en script</span>
+          </div>
+        </div>
+        <p class="footer-note">&copy; <span id="current-year"></span> Arcarsu. Todos los derechos reservados.</p>
+      </footer>
+
+      <div class="account-overlay" id="account-overlay" hidden></div>
+      <div class="account-modal" id="account-modal" hidden aria-hidden="true">
+        <div class="account-modal-card" role="dialog" aria-modal="true" aria-labelledby="account-modal-title">
+          <button class="account-modal-close" type="button" aria-label="Cerrar inicio de sesion">x</button>
+          <span class="eyebrow">Mi cuenta</span>
+          <h2 id="account-modal-title">Iniciar sesion</h2>
+          <p>Ingresa con la cuenta administradora habilitada para acceder al panel.</p>
+          <form class="account-form" id="account-form">
+            <div class="field">
+              <label for="account-email">Correo electronico</label>
+              <input id="account-email" name="email" type="email" placeholder="tuemail@correo.com" required />
+            </div>
+            <div class="field">
+              <label for="account-password">Contrasena</label>
+              <input id="account-password" name="password" type="password" placeholder="Ingresa tu contrasena" required />
+            </div>
+            <button class="button button-dark" type="submit">Ingresar</button>
+          </form>
+        </div>
+      </div>
+
+      <script src="./script.js"></script>
+    </div>
+  </body>
+</html>

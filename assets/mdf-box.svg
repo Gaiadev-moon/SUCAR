@@ -1,0 +1,17 @@
+<svg width="360" height="240" viewBox="0 0 360 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="360" height="240" rx="28" fill="url(#paint0_linear)"/>
+  <ellipse cx="184" cy="194" rx="102" ry="18" fill="#7C8A68" fill-opacity="0.16"/>
+  <path d="M101 104L179 73L258 104L179 135L101 104Z" fill="#D6BAA1"/>
+  <path d="M101 104V163L179 194V135L101 104Z" fill="#C6A17E"/>
+  <path d="M258 104V163L179 194V135L258 104Z" fill="#B88F69"/>
+  <path d="M133 92L210 63L230 71L153 100L133 92Z" fill="#E7D5C3"/>
+  <circle cx="179" cy="155" r="13" fill="#F5EEE6"/>
+  <path d="M173 155H185" stroke="#B88F69" stroke-width="4" stroke-linecap="round"/>
+  <path d="M179 149V161" stroke="#B88F69" stroke-width="4" stroke-linecap="round"/>
+  <defs>
+    <linearGradient id="paint0_linear" x1="28" y1="19" x2="330" y2="220" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E8EDD9"/>
+      <stop offset="1" stop-color="#B2BD99"/>
+    </linearGradient>
+  </defs>
+</svg>

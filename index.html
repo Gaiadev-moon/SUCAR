@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Arcarsu | Novedades</title>
+    <meta
+      name="description"
+      content="Arcarsu ofrece tazas personalizadas y articulos MDF para regalos, eventos, emprendimientos y compras por cantidad."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body data-page="novedades">
+    <div class="page-shell">
+      <header class="site-header">
+        <div class="header-inner">
+          <a class="brand" href="./index.html" aria-label="Arcarsu inicio">
+            <span class="brand-title">Arcarsu</span>
+            <span class="brand-subtitle">Tazas y piezas MDF</span>
+          </a>
+
+          <div class="header-tools">
+            <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+            <div class="account-area">
+              <div class="notifications-area">
+                <button class="notifications-toggle" type="button" aria-expanded="false" aria-controls="notifications-panel" aria-label="Notificaciones">
+                  <span class="notifications-toggle-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" role="img" focusable="false">
+                      <path d="M12 22a2.6 2.6 0 0 0 2.5-2h-5A2.6 2.6 0 0 0 12 22Zm7-5h-1V11a6 6 0 1 0-12 0v6H5a1 1 0 1 0 0 2h14a1 1 0 1 0 0-2Z"></path>
+                    </svg>
+                  </span>
+                  <span class="notifications-count" data-notifications-count>3</span>
+                </button>
+                <div class="notifications-panel" id="notifications-panel" hidden>
+                  <span class="account-panel-label">Notificaciones</span>
+                  <div class="notifications-list">
+                    <article class="notification-item notification-success">
+                      <strong>Pedido completado</strong>
+                      <p>Tu ultimo pedido fue preparado correctamente y esta listo para seguimiento.</p>
+                    </article>
+                    <article class="notification-item notification-warning">
+                      <strong>Sin stock parcial</strong>
+                      <p>Uno de los productos pedidos necesita confirmacion antes de avanzar.</p>
+                    </article>
+                    <article class="notification-item notification-info">
+                      <strong>Actualizacion de pedido</strong>
+                      <p>Hay cambios recientes en tiempos de entrega o preparacion.</p>
+                    </article>
+                  </div>
+                </div>
+              </div>
+              <button class="account-toggle" type="button" aria-expanded="false" aria-controls="account-panel" aria-label="Mi cuenta">
+                <span class="account-toggle-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" role="img" focusable="false">
+                    <path d="M12 12a4.2 4.2 0 1 0 0-8.4 4.2 4.2 0 0 0 0 8.4Zm0 2.1c-4.55 0-8.25 2.48-8.25 5.55 0 .41.34.75.75.75h15a.75.75 0 0 0 .75-.75c0-3.07-3.7-5.55-8.25-5.55Z"></path>
+                  </svg>
+                </span>
+                <span class="account-toggle-text" data-account-trigger-text>Iniciar sesion</span>
+              </button>
+              <div class="account-panel" id="account-panel" hidden>
+                <div class="account-panel-user" data-account-user hidden>
+                  <span class="account-panel-label">Mi cuenta</span>
+                  <strong data-account-name>Cliente Arcarsu</strong>
+                  <div class="account-links">
+                    <a href="./admin.html" data-admin-link hidden>Panel admin</a>
+                    <a href="./checkout.html">Pedidos</a>
+                    <a href="./contacto.html">Ayuda y soporte</a>
+                    <button class="account-logout" type="button">Cerrar sesion</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <nav class="site-nav site-nav-top" id="site-nav" aria-label="Principal">
+            <a class="is-active" href="./index.html">Inicio</a>
+            <a href="./tazas.html">Tazas</a>
+            <a href="./mdf.html">MDF</a>
+            <a href="./contacto.html">Contacto</a>
+          </nav>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero hero-home hero-home-updated">
+          <div class="hero-copy">
+            <span class="eyebrow">Arcarsu</span>
+            <h1>Fabricamos tazas personalizadas y piezas en MDF con terminacion cuidada para regalos, eventos y ventas por cantidad.</h1>
+          </div>
+
+          <div class="hero-showcase">
+            <article class="showcase-card showcase-card-large">
+              <span class="stage-label">Destacado</span>
+              <div class="showcase-visual">
+                <img src="./assets/stock/mug-latte-hands.jpg" alt="Taza en escena calida" />
+                <img src="./assets/mdf-crops/40b44245-9465-4464-8401-0308ec38b686.jpg" alt="Caja MDF Arcarsu" />
+              </div>
+              <div>
+                <strong>Soluciones listas para vender, regalar y personalizar.</strong>
+                <p>Tazas y piezas MDF pensadas para generar una mejor presentacion y una compra mas clara.</p>
+              </div>
+            </article>
+
+            <div class="showcase-mini-grid">
+              <article class="showcase-mini">
+                <span class="news-tag">Tazas</span>
+                <strong>Fabricamos tazas con buena terminacion y una presentacion mas cuidada.</strong>
+              </article>
+              <article class="showcase-mini">
+                <span class="news-tag">MDF</span>
+                <strong>Fabricamos piezas en MDF con buena terminacion y calidad cuidada.</strong>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-intro">
+            <span class="eyebrow">Categorias</span>
+            <h2>Nuestra seleccion de mejores categorias.</h2>
+          </div>
+
+          <div class="category-grid">
+            <article class="category-card card-clickable" data-card-link="./tazas.html">
+              <div class="category-media">
+                <img src="./assets/stock/mug-wood-table.jpg" alt="Taza en mesa de madera" />
+              </div>
+              <span class="news-tag">Tazas</span>
+              <h3>Tazas personalizadas</h3>
+              <p>Modelos para regalo, fechas especiales, emprendimientos y marcas.</p>
+              <a class="category-link-accent" href="./tazas.html">Explorar tazas</a>
+            </article>
+
+            <article class="category-card card-clickable" data-card-link="./mdf.html">
+              <div class="category-media">
+                <img src="./assets/mdf-crops/16e32d21-3a61-4df9-9fa6-2df079e7d1df.jpg" alt="Cofre MDF" />
+              </div>
+              <span class="news-tag">MDF</span>
+              <h3>Cajas y articulos MDF</h3>
+              <p>Opciones listas para decorar, regalar o vender por cantidad.</p>
+              <a class="category-link-accent" href="./mdf.html">Explorar MDF</a>
+            </article>
+
+            <article class="category-card card-clickable" data-card-link="./contacto.html">
+              <div class="category-media">
+                <img src="./assets/stock/gift-wrap-flatlay.jpg" alt="Regalos envueltos sobre mesa de madera" />
+              </div>
+              <span class="news-tag">Categoria</span>
+              <h3>Aqui irian otras categorias</h3>
+              <p>Este espacio puede usarse para sumar nuevas lineas, temporadas o productos especiales.</p>
+              <a href="./contacto.html">Personalizar seccion</a>
+            </article>
+
+            <article class="category-card card-clickable" data-card-link="./contacto.html">
+              <div class="category-media">
+                <img src="./assets/stock/craftsman-wood.jpg" alt="Trabajo artesanal en madera" />
+              </div>
+              <span class="news-tag">Categoria</span>
+              <h3>Aqui irian otras categorias</h3>
+              <p>Tambien puede adaptarse para colecciones nuevas, promos o una categoria comercial importante.</p>
+              <a href="./contacto.html">Personalizar seccion</a>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <div class="promo-grid">
+            <article class="promo-banner promo-banner-large">
+              <img src="./assets/stock/hands-wrapping.jpg" alt="Banner promocional de regalos personalizados" />
+              <div class="promo-content">
+                <span class="eyebrow">Promo de temporada</span>
+                <h3>Regalos personalizados para sorprender y vender mejor.</h3>
+                <p>Este bloque puede cambiarse por promociones mensuales, packs o campañas especiales.</p>
+                <a class="button button-dark" href="https://wa.me/5491100000000" target="_blank" rel="noreferrer">Consultar promo</a>
+              </div>
+            </article>
+
+            <article class="promo-banner promo-banner-accent">
+              <div class="promo-content">
+                <span class="eyebrow">Arcarsu</span>
+                <h3>Aqui puede ir otra promo o una categoria destacada.</h3>
+                <p>Este bloque puede adaptarse a una novedad, una campaña visual o una linea principal del negocio.</p>
+                <a class="button button-light" href="./contacto.html">Ver mas</a>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-intro">
+            <span class="eyebrow">Destacados</span>
+            <h2>Nuestros productos destacados</h2>
+          </div>
+
+          <div class="featured-grid">
+            <article class="featured-card card-clickable" data-card-link="./tazas.html">
+              <div class="featured-image surface-rose">
+                <img src="./assets/stock/mug-latte-hands.jpg" alt="Taza personalizada destacada" />
+              </div>
+              <div class="featured-copy">
+                <h3>Taza infantil arcoiris</h3>
+                <strong>$5.400</strong>
+                <p>Taza sublimable de 11 oz ideal para regalos, souvenires y temporadas escolares.</p>
+                <a class="product-link primary" href="./tazas.html">Ver mas</a>
+              </div>
+            </article>
+
+            <article class="featured-card card-clickable" data-card-link="./mdf.html">
+              <div class="featured-image product-visual-white">
+                <img src="./assets/mdf-crops/40b44245-9465-4464-8401-0308ec38b686.jpg" alt="Caja corazon Etsy grande" />
+              </div>
+              <div class="featured-copy">
+                <h3>Caja corazon Etsy grande</h3>
+                <strong>$2.000</strong>
+                <p>Pieza MDF con presencia premium para regalar, decorar o sumar a una linea artesanal.</p>
+                <a class="product-link primary" href="./mdf.html">Ver mas</a>
+              </div>
+            </article>
+
+            <article class="featured-card card-clickable" data-card-link="https://wa.me/5491100000000">
+              <div class="featured-image surface-paper">
+                <img src="./assets/stock/mug-wood-table.jpg" alt="Taza corporativa blanca" />
+              </div>
+              <div class="featured-copy">
+                <h3>Taza corporativa blanca</h3>
+                <strong>Consultar precio</strong>
+                <p>Modelo para marcas, eventos y acciones promocionales con compra por cantidad.</p>
+                <a class="product-link primary" href="https://wa.me/5491100000000" target="_blank" rel="noreferrer">Consultar</a>
+              </div>
+            </article>
+
+            <article class="featured-card card-clickable" data-card-link="https://wa.me/5491100000000">
+              <div class="featured-image surface-sand">
+                <img src="./assets/stock/gift-wrap-flatlay.jpg" alt="Pack de regalos y temporadas" />
+              </div>
+              <div class="featured-copy">
+                <h3>Pack regalos de temporada</h3>
+                <strong>Consultar precio</strong>
+                <p>Una forma de mostrar promos armadas, regalos corporativos o combos especiales.</p>
+                <a class="product-link primary" href="https://wa.me/5491100000000" target="_blank" rel="noreferrer">Consultar</a>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-intro">
+            <span class="eyebrow">Confianza</span>
+            <h2>Una experiencia mas clara para comprar con seguridad.</h2>
+          </div>
+
+          <div class="value-grid">
+            <article class="value-card">
+              <h3>Atencion personalizada</h3>
+              <p>Respondemos consultas de stock, personalizacion y cantidades de forma directa.</p>
+            </article>
+            <article class="value-card">
+              <h3>Listos para vender o regalar</h3>
+              <p>Productos pensados para resolucion rapida y buena presentacion comercial.</p>
+            </article>
+            <article class="value-card">
+              <h3>Opciones por cantidad</h3>
+              <p>Modelos preparados para revendedores, eventos y compras mayoristas.</p>
+            </article>
+            <article class="value-card">
+              <h3>Diseños personalizados</h3>
+              <p>Podemos adaptar lineas para fechas especiales, marcas y pedidos puntuales.</p>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-intro">
+            <span class="eyebrow">Como comprar</span>
+            <h2>Un proceso simple para que el pedido no se frene.</h2>
+          </div>
+
+          <div class="steps-grid">
+            <article class="step-card">
+              <span class="step-number">1</span>
+              <h3>Elegis el producto</h3>
+              <p>Recorres tazas o MDF y sumas al pedido lo que te interesa.</p>
+            </article>
+            <article class="step-card">
+              <span class="step-number">2</span>
+              <h3>Consultas stock o personalizacion</h3>
+              <p>Definimos si necesitas un modelo listo o una opcion adaptada.</p>
+            </article>
+            <article class="step-card">
+              <span class="step-number">3</span>
+              <h3>Confirmas el pedido</h3>
+              <p>Completas los datos basicos y dejamos armada la compra por WhatsApp.</p>
+            </article>
+            <article class="step-card">
+              <span class="step-number">4</span>
+              <h3>Coordinamos entrega o retiro</h3>
+              <p>Te indicamos tiempos, punto de retiro o envio segun tu pedido.</p>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-intro">
+            <span class="eyebrow">Resenas</span>
+            <h2>Prueba social para transmitir mas confianza.</h2>
+          </div>
+
+          <div class="testimonial-grid">
+            <article class="testimonial-card">
+              <div class="testimonial-stars">★★★★★</div>
+              <p>"Pedimos tazas para un evento y la atencion fue rapida, clara y muy prolija."</p>
+              <strong>Marina G.</strong>
+            </article>
+            <article class="testimonial-card">
+              <div class="testimonial-stars">★★★★★</div>
+              <p>"Las cajas MDF se ven mucho mejor en persona y el pedido por WhatsApp fue super simple."</p>
+              <strong>Emprendimiento Nube</strong>
+            </article>
+            <article class="testimonial-card">
+              <div class="testimonial-stars">★★★★★</div>
+              <p>"Nos gusto que todo estuviera ordenado y con opciones por cantidad bien claras."</p>
+              <strong>Lucas R.</strong>
+            </article>
+          </div>
+        </section>
+
+        <section class="cta-band">
+          <div class="cta-band-copy">
+            <span class="eyebrow">Listo para pedir</span>
+            <h2>Si ya sabes lo que necesitas, lo resolvemos por WhatsApp.</h2>
+            <p>Consulta stock, personalizacion, cantidades y entrega desde un canal directo y comodo.</p>
+          </div>
+          <div class="cta-band-actions">
+            <a class="button button-dark" href="https://wa.me/5491100000000" target="_blank" rel="noreferrer">Pedir por WhatsApp</a>
+            <a class="button button-light" href="./contacto.html">Ir a contacto</a>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <div class="footer-grid">
+          <div>
+            <a class="brand brand-footer" href="./index.html" aria-label="Arcarsu inicio">
+              <span class="brand-title">Arcarsu</span>
+              <span class="brand-subtitle">Tazas y piezas en MDF para regalo, marca y eventos.</span>
+            </a>
+          </div>
+
+          <div class="footer-links">
+            <h3>Links rapidos</h3>
+            <a href="./index.html">Novedades</a>
+            <a href="./tazas.html">Tazas</a>
+            <a href="./mdf.html">MDF</a>
+            <a href="./contacto.html">Contacto</a>
+          </div>
+
+          <div class="footer-links">
+            <h3>Contacto</h3>
+            <a href="https://wa.me/5491100000000" target="_blank" rel="noreferrer">WhatsApp directo</a>
+            <a href="mailto:hola@arcarsu.com">hola@arcarsu.com</a>
+            <span>Moron, Buenos Aires</span>
+            <span>Lunes a sabados de 9 a 18 hs</span>
+          </div>
+        </div>
+        <p class="footer-note">&copy; <span id="current-year"></span> Arcarsu. Todos los derechos reservados.</p>
+      </footer>
+
+      <div class="account-overlay" id="account-overlay" hidden></div>
+      <div class="account-modal" id="account-modal" hidden aria-hidden="true">
+        <div class="account-modal-card" role="dialog" aria-modal="true" aria-labelledby="account-modal-title">
+          <button class="account-modal-close" type="button" aria-label="Cerrar inicio de sesion">x</button>
+          <span class="eyebrow">Mi cuenta</span>
+          <h2 id="account-modal-title">Iniciar sesion</h2>
+          <p>Accede a tu cuenta para ver tus datos, pedidos pendientes y estado del pedido actual.</p>
+          <form class="account-form" id="account-form">
+            <div class="field">
+              <label for="account-email">Correo electronico</label>
+              <input id="account-email" name="email" type="email" placeholder="tuemail@correo.com" required />
+            </div>
+            <div class="field">
+              <label for="account-password">Contrasena</label>
+              <input id="account-password" name="password" type="password" placeholder="Ingresa tu contrasena" required />
+            </div>
+            <button class="button button-dark" type="submit">Ingresar</button>
+          </form>
+        </div>
+      </div>
+
+      <button class="cart-float cart-launch" type="button" aria-expanded="false" aria-controls="cart-drawer" aria-label="Abrir pedido">
+        <span class="cart-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" role="img" focusable="false">
+            <path d="M7 7h10l-1.1 11H8.1L7 7Zm2-2a3 3 0 0 1 6 0h2a5 5 0 0 0-10 0h2Z"></path>
+          </svg>
+        </span>
+        <span class="cart-float-text">Pedido</span>
+        <span class="cart-count" id="cart-count">0</span>
+      </button>
+      <a class="whatsapp-float" href="https://wa.me/5491100000000" target="_blank" rel="noreferrer">WhatsApp</a>
+      <div class="cart-backdrop" id="cart-backdrop"></div>
+      <aside class="cart-drawer" id="cart-drawer" aria-label="Pedido">
+        <div class="cart-header">
+          <h2>Tu pedido</h2>
+          <button class="cart-close" type="button" aria-label="Cerrar pedido">x</button>
+        </div>
+        <div class="cart-items" id="cart-items">
+          <p class="cart-empty">Todavia no agregaste productos.</p>
+        </div>
+        <div class="cart-footer">
+          <strong id="cart-total">Total: $0</strong>
+          <a class="button button-dark cart-checkout" id="cart-checkout" href="./checkout.html">Comprar</a>
+        </div>
+      </aside>
+    </div>
+
+    <script src="./script.js"></script>
+  </body>
+</html>

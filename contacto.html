@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Arcarsu | Contacto</title>
+    <meta
+      name="description"
+      content="Pagina de contacto Arcarsu con WhatsApp, direccion, telefonos y formulario de correo."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body data-page="contacto">
+    <div class="page-shell">
+      <header class="site-header">
+        <div class="header-inner">
+          <a class="brand" href="./index.html" aria-label="Arcarsu inicio">
+            <span class="brand-title">Arcarsu</span>
+            <span class="brand-subtitle">Tazas y piezas MDF</span>
+          </a>
+
+          <div class="header-tools">
+            <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+              Menu
+            </button>
+            <div class="account-area">
+              <div class="notifications-area">
+                <button class="notifications-toggle" type="button" aria-expanded="false" aria-controls="notifications-panel" aria-label="Notificaciones">
+                  <span class="notifications-toggle-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" role="img" focusable="false">
+                      <path d="M12 22a2.6 2.6 0 0 0 2.5-2h-5A2.6 2.6 0 0 0 12 22Zm7-5h-1V11a6 6 0 1 0-12 0v6H5a1 1 0 1 0 0 2h14a1 1 0 1 0 0-2Z"></path>
+                    </svg>
+                  </span>
+                  <span class="notifications-count" data-notifications-count>3</span>
+                </button>
+                <div class="notifications-panel" id="notifications-panel" hidden>
+                  <span class="account-panel-label">Notificaciones</span>
+                  <div class="notifications-list">
+                    <article class="notification-item notification-success">
+                      <strong>Pedido completado</strong>
+                      <p>Tu ultimo pedido fue preparado correctamente y esta listo para seguimiento.</p>
+                    </article>
+                    <article class="notification-item notification-warning">
+                      <strong>Sin stock parcial</strong>
+                      <p>Uno de los productos pedidos necesita confirmacion antes de avanzar.</p>
+                    </article>
+                    <article class="notification-item notification-info">
+                      <strong>Actualizacion de pedido</strong>
+                      <p>Hay cambios recientes en tiempos de entrega o preparacion.</p>
+                    </article>
+                  </div>
+                </div>
+              </div>
+              <button class="account-toggle" type="button" aria-expanded="false" aria-controls="account-panel" aria-label="Mi cuenta">
+                <span class="account-toggle-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" role="img" focusable="false">
+                    <path d="M12 12a4.2 4.2 0 1 0 0-8.4 4.2 4.2 0 0 0 0 8.4Zm0 2.1c-4.55 0-8.25 2.48-8.25 5.55 0 .41.34.75.75.75h15a.75.75 0 0 0 .75-.75c0-3.07-3.7-5.55-8.25-5.55Z"></path>
+                  </svg>
+                </span>
+                <span class="account-toggle-text" data-account-trigger-text>Iniciar sesion</span>
+              </button>
+              <div class="account-panel" id="account-panel" hidden>
+                <div class="account-panel-user" data-account-user hidden>
+                  <span class="account-panel-label">Mi cuenta</span>
+                  <strong data-account-name>Cliente Arcarsu</strong>
+                  <div class="account-links">
+                    <a href="./admin.html" data-admin-link hidden>Panel admin</a>
+                    <a href="./checkout.html">Pedidos</a>
+                    <a href="./contacto.html">Ayuda y soporte</a>
+                    <button class="account-logout" type="button">Cerrar sesion</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <nav class="site-nav site-nav-top" id="site-nav" aria-label="Principal">
+            <a href="./index.html">Inicio</a>
+            <a href="./tazas.html">Tazas</a>
+            <a href="./mdf.html">MDF</a>
+            <a class="is-active" href="./contacto.html">Contacto</a>
+          </nav>
+        </div>
+      </header>
+
+      <main>
+        <section class="contact-layout">
+          <div class="contact-copy">
+            <span class="eyebrow">Contacto directo</span>
+            <h2>Contacto simple para resolver pedidos, envios y consultas.</h2>
+            <p class="lead">
+              Todos los datos basicos de Arcarsu en una sola pagina para hablar rapido y pasar a compra.
+            </p>
+            <div class="contact-actions">
+              <a class="button button-dark" href="https://wa.me/5491100000000" target="_blank" rel="noreferrer">
+                Escribir por WhatsApp
+              </a>
+              <a class="button button-light" href="mailto:hola@arcarsu.com">Enviar email</a>
+            </div>
+          </div>
+
+          <div class="contact-grid">
+            <article class="contact-card">
+              <span class="contact-label">Telefonos</span>
+              <h3>Atencion comercial</h3>
+              <p>+54 9 11 0000 0000<br />+54 9 11 3513 2759</p>
+              <a class="contact-inline-link" href="tel:+5491100000000">
+                <span class="contact-link-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" role="img" focusable="false">
+                    <path d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24c1.08.36 2.24.54 3.42.54a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.52 21 3 13.48 3 4a1 1 0 0 1 1-1h3.52a1 1 0 0 1 1 1c0 1.18.18 2.34.54 3.42a1 1 0 0 1-.24 1l-2.22 2.38Z"></path>
+                  </svg>
+                </span>
+                <span>Llamar ahora</span>
+              </a>
+            </article>
+
+            <article class="contact-card">
+              <span class="contact-label">Direccion</span>
+              <h3>Showroom y retiro</h3>
+              <p>Lavalle 2239, Moron<br />Buenos Aires, Argentina</p>
+              <a class="contact-inline-link" href="https://maps.google.com/?q=Lavalle+2239+Moron" target="_blank" rel="noreferrer">
+                <span class="contact-link-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" role="img" focusable="false">
+                    <path d="M12 21s-6-5.33-6-11a6 6 0 1 1 12 0c0 5.67-6 11-6 11Zm0-8.5A2.5 2.5 0 1 0 12 7a2.5 2.5 0 0 0 0 5.5Z"></path>
+                  </svg>
+                </span>
+                <span>Ver ubicacion</span>
+              </a>
+            </article>
+
+            <article class="contact-card">
+              <span class="contact-label">WhatsApp</span>
+              <h3>Canal recomendado</h3>
+              <p>El canal mas practico para pasar stock, cantidades y tiempos de entrega.</p>
+              <a class="contact-inline-link" href="https://wa.me/5491100000000" target="_blank" rel="noreferrer">
+                <span class="contact-link-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" role="img" focusable="false">
+                    <path d="M19.05 4.94A9.9 9.9 0 0 0 12.03 2C6.55 2 2.1 6.45 2.1 11.93c0 1.75.46 3.46 1.32 4.97L2 22l5.25-1.38a9.9 9.9 0 0 0 4.77 1.22h.01c5.48 0 9.93-4.45 9.93-9.93a9.87 9.87 0 0 0-2.91-6.97ZM12.03 20.16h-.01a8.2 8.2 0 0 1-4.18-1.14l-.3-.18-3.12.82.83-3.04-.2-.31a8.24 8.24 0 0 1-1.26-4.38c0-4.54 3.69-8.24 8.24-8.24 2.2 0 4.28.86 5.84 2.42a8.2 8.2 0 0 1 2.4 5.83c0 4.55-3.7 8.24-8.24 8.24Zm4.52-6.13c-.25-.12-1.5-.74-1.73-.83-.23-.08-.4-.12-.57.12-.17.25-.65.83-.8 1-.14.17-.29.19-.54.06-.25-.12-1.05-.39-2-1.25-.74-.66-1.24-1.47-1.39-1.72-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.43.12-.14.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.57-1.37-.78-1.88-.21-.5-.42-.43-.57-.44h-.49c-.17 0-.43.06-.66.31-.23.25-.86.84-.86 2.04 0 1.2.88 2.37 1 2.53.12.17 1.72 2.63 4.17 3.69.58.25 1.03.39 1.38.5.58.18 1.1.15 1.51.09.46-.07 1.5-.61 1.71-1.2.21-.6.21-1.11.15-1.21-.06-.1-.23-.17-.48-.29Z"></path>
+                  </svg>
+                </span>
+                <span>Abrir chat</span>
+              </a>
+            </article>
+          </div>
+
+          <section class="map-card">
+            <div class="map-card-copy">
+              <span class="eyebrow">Ubicacion</span>
+              <h2>Encontranos en el mapa.</h2>
+              <p>
+                Mostramos el punto de referencia para retiro, visitas coordinadas o consultas de ubicacion.
+              </p>
+              <a
+                class="button button-light"
+                href="https://maps.google.com/?q=Lavalle+2239+Moron"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Abrir en Google Maps
+              </a>
+            </div>
+
+            <div class="map-frame-wrap">
+              <iframe
+                class="map-frame"
+                title="Mapa de Arcarsu"
+                src="https://www.google.com/maps?q=Lavalle+2239+Moron,+Buenos+Aires,+Argentina&z=15&output=embed"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+              ></iframe>
+            </div>
+          </section>
+
+          <div class="contact-main">
+            <section class="contact-form-card">
+              <span class="eyebrow">Formulario de correo</span>
+              <h2>Contanos que necesitas.</h2>
+              <p>
+                El formulario abre tu correo con el mensaje ya armado para que la consulta salga completa.
+              </p>
+
+              <form id="contact-form">
+                <div class="field">
+                  <label for="name">Nombre</label>
+                  <input id="name" name="name" type="text" placeholder="Tu nombre o marca" required />
+                </div>
+
+                <div class="field">
+                  <label for="email">Correo electronico</label>
+                  <input id="email" name="email" type="email" placeholder="hola@correo.com" required />
+                </div>
+
+                <div class="field">
+                  <label for="phone">Telefono</label>
+                  <input id="phone" name="phone" type="tel" placeholder="+54 9 11..." />
+                </div>
+
+                <div class="field">
+                  <label for="message">Mensaje</label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    placeholder="Quiero consultar por una linea de tazas, productos MDF o un pedido personalizado."
+                    required
+                  ></textarea>
+                </div>
+
+                <button class="button button-dark" type="submit">Enviar consulta</button>
+                <p class="form-note" id="form-note"></p>
+              </form>
+            </section>
+
+            <aside class="contact-aside">
+              <span class="contact-label">Informacion util</span>
+              <h3>Antes de escribirnos</h3>
+              <p>Podes usar esta pagina para centralizar retiro, envio, horarios y medios de pago.</p>
+              <p>Tambien se puede sumar un mapa o preguntas frecuentes si despues lo necesitan.</p>
+              <a class="contact-button" href="./index.html">Volver a novedades</a>
+            </aside>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <div class="footer-grid">
+          <div>
+            <a class="brand brand-footer" href="./index.html" aria-label="Arcarsu inicio">
+              <span class="brand-title">Arcarsu</span>
+              <span class="brand-subtitle">Contacto para consultas, pedidos y cotizaciones.</span>
+            </a>
+          </div>
+
+          <div class="footer-links">
+            <h3>Navegacion</h3>
+            <a href="./index.html">Novedades</a>
+            <a href="./tazas.html">Tazas</a>
+            <a href="./mdf.html">MDF</a>
+            <a href="./contacto.html">Contacto</a>
+          </div>
+
+          <div class="footer-links">
+            <h3>Canales</h3>
+            <a href="https://wa.me/5491100000000" target="_blank" rel="noreferrer">WhatsApp directo</a>
+            <a href="mailto:hola@arcarsu.com">hola@arcarsu.com</a>
+            <span>Lavalle 2239, Moron</span>
+          </div>
+        </div>
+        <p class="footer-note">&copy; <span id="current-year"></span> Arcarsu. Todos los derechos reservados.</p>
+      </footer>
+
+      <div class="account-overlay" id="account-overlay" hidden></div>
+      <div class="account-modal" id="account-modal" hidden aria-hidden="true">
+        <div class="account-modal-card" role="dialog" aria-modal="true" aria-labelledby="account-modal-title">
+          <button class="account-modal-close" type="button" aria-label="Cerrar inicio de sesion">x</button>
+          <span class="eyebrow">Mi cuenta</span>
+          <h2 id="account-modal-title">Iniciar sesion</h2>
+          <p>Accede a tu cuenta para ver tus datos, pedidos pendientes y estado del pedido actual.</p>
+          <form class="account-form" id="account-form">
+            <div class="field">
+              <label for="account-email">Correo electronico</label>
+              <input id="account-email" name="email" type="email" placeholder="tuemail@correo.com" required />
+            </div>
+            <div class="field">
+              <label for="account-password">Contrasena</label>
+              <input id="account-password" name="password" type="password" placeholder="Ingresa tu contrasena" required />
+            </div>
+            <button class="button button-dark" type="submit">Ingresar</button>
+          </form>
+        </div>
+      </div>
+
+      <button class="cart-float cart-launch" type="button" aria-expanded="false" aria-controls="cart-drawer" aria-label="Abrir pedido">
+        <span class="cart-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" role="img" focusable="false">
+            <path d="M7 7h10l-1.1 11H8.1L7 7Zm2-2a3 3 0 0 1 6 0h2a5 5 0 0 0-10 0h2Z"></path>
+          </svg>
+        </span>
+        <span class="cart-float-text">Pedido</span>
+        <span class="cart-count" id="cart-count">0</span>
+      </button>
+      <a class="whatsapp-float" href="https://wa.me/5491100000000" target="_blank" rel="noreferrer">WhatsApp</a>
+      <div class="cart-backdrop" id="cart-backdrop"></div>
+      <aside class="cart-drawer" id="cart-drawer" aria-label="Pedido">
+        <div class="cart-header">
+          <h2>Tu pedido</h2>
+          <button class="cart-close" type="button" aria-label="Cerrar pedido">x</button>
+        </div>
+        <div class="cart-items" id="cart-items">
+          <p class="cart-empty">Todavia no agregaste productos.</p>
+        </div>
+        <div class="cart-footer">
+          <strong id="cart-total">Total: $0</strong>
+          <a class="button button-dark cart-checkout" id="cart-checkout" href="./checkout.html">Comprar</a>
+        </div>
+      </aside>
+    </div>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
