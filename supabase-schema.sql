@@ -68,6 +68,7 @@ create table if not exists public.site_banners (
   button_label text not null,
   link text not null,
   image_url text,
+  is_active boolean not null default true,
   updated_at timestamptz not null default now()
 );
 
@@ -76,6 +77,7 @@ alter table public.site_banners drop constraint if exists site_banners_slot_chec
 alter table public.site_banners
   add constraint site_banners_slot_check
   check (slot in ('primary', 'secondary', 'tazas', 'mdf'));
+alter table public.site_banners add column if not exists is_active boolean not null default true;
 
 alter table public.profiles enable row level security;
 alter table public.orders enable row level security;

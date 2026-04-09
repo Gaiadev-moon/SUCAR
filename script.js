@@ -3,6 +3,7 @@ const ACCOUNT_KEY = "arcarsu-account";
 const ORDER_KEY = "arcarsu-orders";
 const ADMIN_PRODUCTS_KEY = "arcarsu-admin-products";
 const BANNERS_KEY = "arcarsu-site-banners";
+const HIDDEN_PRODUCTS_KEY = "arcarsu-hidden-products";
 const ADMIN_EMAIL = "admin@arcarsu.com";
 const WHATSAPP_URL = "https://wa.me/5491100000000";
 const supabaseConfig = window.ARCARSU_SUPABASE_CONFIG || {};
@@ -92,6 +93,7 @@ const adminBannersList = document.querySelector("#admin-banners-list");
 const adminTabs = document.querySelectorAll("[data-admin-tab]");
 const adminPanels = document.querySelectorAll("[data-admin-section]");
 const homeBannerNodes = document.querySelectorAll("[data-home-banner]");
+const catalogProductCards = document.querySelectorAll(".product-card");
 let accountMode = "login";
 
 const BANNER_LABELS = {
@@ -110,6 +112,7 @@ const DEFAULT_BANNERS = {
     buttonLabel: "Consultar promo",
     link: "https://wa.me/5491100000000",
     image: "./assets/stock/hands-wrapping.jpg",
+    isActive: true,
   },
   secondary: {
     slot: "secondary",
@@ -119,6 +122,7 @@ const DEFAULT_BANNERS = {
     buttonLabel: "Ver mas",
     link: "./contacto.html",
     image: "",
+    isActive: true,
   },
   tazas: {
     slot: "tazas",
@@ -128,6 +132,7 @@ const DEFAULT_BANNERS = {
     buttonLabel: "Consultar promo",
     link: "https://wa.me/5491100000000",
     image: "./assets/stock/mug-wood-table.jpg",
+    isActive: true,
   },
   mdf: {
     slot: "mdf",
@@ -137,6 +142,7 @@ const DEFAULT_BANNERS = {
     buttonLabel: "Consultar promo",
     link: "https://wa.me/5491100000000",
     image: "./assets/stock/craftsman-wood.jpg",
+    isActive: true,
   },
 };
 
@@ -210,6 +216,18 @@ const readAdminProducts = () => {
 
 const writeAdminProducts = (products) => {
   localStorage.setItem(ADMIN_PRODUCTS_KEY, JSON.stringify(products));
+};
+
+const readHiddenProducts = () => {
+  try {
+    return JSON.parse(localStorage.getItem(HIDDEN_PRODUCTS_KEY) || "[]");
+  } catch {
+    return [];
+  }
+};
+
+const writeHiddenProducts = (items) => {
+  localStorage.setItem(HIDDEN_PRODUCTS_KEY, JSON.stringify(items));
 };
 
 const readBanners = () => {
@@ -480,6 +498,11 @@ const applyBannerData = (slot, data) => {
   const banner = document.querySelector(`[data-home-banner="${slot}"]`);
   if (!banner || !data) return;
 
+  banner.hidden = data.isActive === false;
+  if (data.isActive === false) {
+    return;
+  }
+
   const eyebrow = banner.querySelector("[data-banner-eyebrow]") || banner.querySelector(".eyebrow");
   const title = banner.querySelector("[data-banner-title]") || banner.querySelector("h3");
   const body = banner.querySelector("[data-banner-body]") || banner.querySelector(".promo-content p");
@@ -508,7 +531,7 @@ const renderSiteBanners = async () => {
     if (supabaseClient) {
       const { data } = await supabaseClient
         .from("site_banners")
-        .select("slot, eyebrow, title, body, button_label, link, image_url")
+        .select("slot, eyebrow, title, body, button_label, link, image_url, is_active")
         .order("slot", { ascending: true });
 
       if (data?.length) {
@@ -521,11 +544,12 @@ const renderSiteBanners = async () => {
             buttonLabel: item.button_label,
             link: item.link,
             image: item.image_url,
+            isActive: item.is_active !== false,
           };
           return acc;
         }, {});
       }
-    }
+    } 
   } catch {}
 
   const mergedBanners = Object.keys(DEFAULT_BANNERS).reduce((acc, key) => {
@@ -548,6 +572,7 @@ const renderSiteBanners = async () => {
             </div>
             <div class="admin-banner-meta">
               <span>${escapeHtml(banner.buttonLabel)}</span>
+              <button class="admin-delete" type="button" data-banner-hide="${escapeHtml(banner.slot)}">${banner.isActive === false ? "Oculto" : "Quitar"}</button>
               <button class="admin-delete" type="button" data-banner-reset="${escapeHtml(banner.slot)}">Restaurar</button>
             </div>
           </article>
@@ -561,7 +586,7 @@ const renderSiteBanners = async () => {
 
 const upsertBanner = async (banner) => {
   if (supabaseClient) {
-    await supabaseClient.from("site_banners").upsert({
+    const payload = {
       slot: banner.slot,
       eyebrow: banner.eyebrow,
       title: banner.title,
@@ -569,7 +594,21 @@ const upsertBanner = async (banner) => {
       button_label: banner.buttonLabel,
       link: banner.link,
       image_url: banner.image,
-    });
+      is_active: banner.isActive !== false,
+    };
+
+    const { error } = await supabaseClient.from("site_banners").upsert(payload);
+    if (error) {
+      await supabaseClient.from("site_banners").upsert({
+        slot: banner.slot,
+        eyebrow: banner.eyebrow,
+        title: banner.title,
+        body: banner.body,
+        button_label: banner.buttonLabel,
+        link: banner.link,
+        image_url: banner.image,
+      });
+    }
     return;
   }
 
@@ -635,6 +674,40 @@ const renderAccountState = () => {
   if (adminLink) {
     adminLink.hidden = !isAdminAccount(account);
   }
+
+  renderAdminCatalogControls();
+};
+
+const renderAdminCatalogControls = () => {
+  if (!catalogProductCards.length) return;
+
+  const account = readAccount();
+  const isAdmin = isAdminAccount(account);
+  const hiddenProducts = readHiddenProducts();
+
+  catalogProductCards.forEach((card) => {
+    const addButton = card.querySelector("[data-add-cart]");
+    const productName = addButton?.getAttribute("data-name") || card.querySelector("h3")?.textContent?.trim() || "";
+    if (!productName) return;
+
+    card.classList.toggle("is-hidden", hiddenProducts.includes(productName));
+
+    let deleteButton = card.querySelector("[data-admin-product-remove]");
+    if (isAdmin) {
+      if (!deleteButton) {
+        deleteButton = document.createElement("button");
+        deleteButton.type = "button";
+        deleteButton.className = "admin-product-trash";
+        deleteButton.setAttribute("data-admin-product-remove", productName);
+        deleteButton.setAttribute("aria-label", `Borrar ${productName}`);
+        deleteButton.textContent = "🗑";
+        const actions = card.querySelector(".product-actions");
+        actions?.appendChild(deleteButton);
+      }
+    } else {
+      deleteButton?.remove();
+    }
+  });
 };
 
 const animateCartFeedback = () => {
@@ -1721,6 +1794,10 @@ const setupAdmin = () => {
       const button = target.closest("[data-product-delete]");
       if (!(button instanceof HTMLElement)) return;
 
+      if (!window.confirm("Estas seguro de que quieres quitar este articulo?")) {
+        return;
+      }
+
       if (supabaseClient) {
         const productId = button.dataset.productId;
         if (!productId) return;
@@ -1764,6 +1841,22 @@ const setupAdmin = () => {
       const target = event.target;
       if (!(target instanceof HTMLElement)) return;
 
+      const hideButton = target.closest("[data-banner-hide]");
+      if (hideButton instanceof HTMLElement) {
+        const slot = hideButton.dataset.bannerHide;
+        if (!slot || !(slot in DEFAULT_BANNERS)) return;
+        if (!window.confirm("Estas seguro de que quieres quitar este banner de la pagina?")) return;
+
+        await upsertBanner({
+          ...DEFAULT_BANNERS[slot],
+          ...(readBanners()[slot] || {}),
+          slot,
+          isActive: false,
+        });
+        await renderSiteBanners();
+        return;
+      }
+
       const button = target.closest("[data-banner-reset]");
       if (!(button instanceof HTMLElement)) return;
 
@@ -1780,6 +1873,26 @@ const setupAdmin = () => {
       tab.addEventListener("click", () => {
         setAdminTab(tab.dataset.adminTab || "overview");
       });
+    });
+  }
+
+  if (catalogProductCards.length) {
+    document.addEventListener("click", (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLElement)) return;
+      const deleteButton = target.closest("[data-admin-product-remove]");
+      if (!(deleteButton instanceof HTMLElement)) return;
+
+      const productName = deleteButton.getAttribute("data-admin-product-remove") || "";
+      if (!productName) return;
+      if (!window.confirm(`Estas seguro de que quieres ocultar "${productName}" del catalogo?`)) return;
+
+      const hiddenProducts = readHiddenProducts();
+      if (!hiddenProducts.includes(productName)) {
+        hiddenProducts.push(productName);
+        writeHiddenProducts(hiddenProducts);
+      }
+      renderAdminCatalogControls();
     });
   }
 
