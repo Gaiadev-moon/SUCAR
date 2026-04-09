@@ -515,36 +515,38 @@ main,
   inset: 0;
   display: grid;
   place-items: center;
-  padding: 28px;
+  padding: 18px;
   z-index: 45;
 }
 
 .account-modal-card {
   position: relative;
-  width: min(460px, 100%);
-  padding: 24px 24px 22px;
-  border-radius: 24px;
+  width: min(388px, 100%);
+  max-height: min(86vh, 720px);
+  padding: 18px 18px 16px;
+  border-radius: 22px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(255, 249, 245, 0.98));
   border: 1px solid rgba(103, 62, 24, 0.1);
   box-shadow:
     0 28px 60px rgba(55, 33, 17, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
   display: grid;
-  gap: 12px;
+  gap: 10px;
+  overflow: auto;
 }
 
 .account-modal-card h2 {
   margin: 0;
-  font-size: clamp(1.95rem, 3vw, 2.35rem);
-  line-height: 1.02;
+  font-size: clamp(1.52rem, 2.4vw, 1.9rem);
+  line-height: 1.08;
   letter-spacing: -0.04em;
 }
 
 .account-modal-card p {
   margin: 0;
   color: var(--muted);
-  line-height: 1.55;
-  font-size: 0.96rem;
+  line-height: 1.45;
+  font-size: 0.88rem;
 }
 
 .account-modal-close {
@@ -562,25 +564,25 @@ main,
 
 .account-form {
   display: grid;
-  gap: 14px;
-  margin-top: 4px;
+  gap: 10px;
+  margin-top: 2px;
 }
 
 .account-form .field {
   display: grid;
-  gap: 8px;
+  gap: 6px;
 }
 
 .account-form label {
-  font-size: 0.86rem;
+  font-size: 0.8rem;
   font-weight: 700;
   color: #6c584c;
 }
 
 .account-form input {
-  min-height: 52px;
-  padding: 0 16px;
-  border-radius: 16px;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 14px;
   border: 1px solid rgba(103, 62, 24, 0.12);
   background: #fffdfa;
   color: var(--text);
@@ -598,9 +600,9 @@ main,
 }
 
 .account-auth-note {
-  padding: 12px 14px;
-  border-radius: 16px;
-  font-size: 0.9rem;
+  padding: 10px 12px;
+  border-radius: 14px;
+  font-size: 0.82rem;
   font-weight: 600;
 }
 
@@ -622,20 +624,21 @@ main,
 .account-mode-switch {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-  padding: 6px;
-  border-radius: 18px;
+  gap: 6px;
+  padding: 5px;
+  border-radius: 16px;
   background: rgba(255, 241, 230, 0.88);
   border: 1px solid rgba(234, 123, 44, 0.14);
 }
 
 .account-mode-chip {
-  min-height: 42px;
+  min-height: 36px;
   border: 0;
-  border-radius: 14px;
+  border-radius: 12px;
   background: transparent;
   color: #7b6354;
   font-weight: 800;
+  font-size: 0.84rem;
   cursor: pointer;
 }
 
@@ -647,23 +650,23 @@ main,
 
 .account-form-actions {
   display: grid;
-  gap: 10px;
+  gap: 8px;
 }
 
 .account-submit {
   width: 100%;
-  min-height: 48px;
-  border-radius: 16px;
+  min-height: 42px;
+  border-radius: 14px;
 }
 
 .account-form-meta {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
   color: var(--muted);
-  font-size: 0.9rem;
+  font-size: 0.84rem;
 }
 
 .account-inline-link {
@@ -671,7 +674,7 @@ main,
   border: 0;
   background: none;
   color: var(--accent-deep);
-  font-size: 0.92rem;
+  font-size: 0.84rem;
   font-weight: 800;
   cursor: pointer;
 }
@@ -681,33 +684,6 @@ main,
   text-decoration: underline;
 }
 
-.account-google {
-  min-height: 50px;
-  width: 100%;
-  border-radius: 16px;
-  border: 1px solid rgba(103, 62, 24, 0.12);
-  background: #fff;
-  color: var(--text);
-  font-weight: 800;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  cursor: pointer;
-}
-
-.account-google-mark {
-  width: 28px;
-  height: 28px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #4285f4, #34a853);
-  color: #fff;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.92rem;
-  font-weight: 900;
-}
 
 .admin-shell {
   display: grid;
@@ -2212,6 +2188,31 @@ main section {
 }
 
 @media (max-width: 560px) {
+  .account-modal {
+    padding: 12px;
+    align-items: center;
+  }
+
+  .account-modal-card {
+    width: 100%;
+    max-height: 88vh;
+    padding: 16px 14px 14px;
+    border-radius: 18px;
+  }
+
+  .account-modal-card h2 {
+    font-size: 1.36rem;
+  }
+
+  .account-modal-card p {
+    font-size: 0.82rem;
+  }
+
+  .account-modal-close {
+    top: 12px;
+    right: 12px;
+  }
+
   .brand-title {
     font-size: 1.7rem;
   }

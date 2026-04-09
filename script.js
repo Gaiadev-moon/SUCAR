@@ -1,4 +1,4 @@
-const CART_KEY = "arcarsu-cart";
+﻿const CART_KEY = "arcarsu-cart";
 const ACCOUNT_KEY = "arcarsu-account";
 const ORDER_KEY = "arcarsu-orders";
 const ADMIN_PRODUCTS_KEY = "arcarsu-admin-products";
@@ -113,7 +113,7 @@ const DEFAULT_BANNERS = {
     slot: "primary",
     eyebrow: "Promo de temporada",
     title: "Regalos personalizados para sorprender y vender mejor.",
-    body: "Este bloque puede cambiarse por promociones mensuales, packs o campañas especiales.",
+    body: "Este bloque puede cambiarse por promociones mensuales, packs o campaÃ±as especiales.",
     buttonLabel: "Consultar promo",
     link: "https://wa.me/5491100000000",
     image: "./assets/stock/hands-wrapping.jpg",
@@ -123,7 +123,7 @@ const DEFAULT_BANNERS = {
     slot: "secondary",
     eyebrow: "Arcarsu",
     title: "Aqui puede ir otra promo o una categoria destacada.",
-    body: "Este bloque puede adaptarse a una novedad, una campaña visual o una línea principal del negocio.",
+    body: "Este bloque puede adaptarse a una novedad, una campaÃ±a visual o una lÃ­nea principal del negocio.",
     buttonLabel: "Ver mas",
     link: "./contacto.html",
     image: "",
@@ -131,9 +131,9 @@ const DEFAULT_BANNERS = {
   },
   tazas: {
     slot: "tazas",
-    eyebrow: "Campaña destacada",
+    eyebrow: "CampaÃ±a destacada",
     title: "Espacio ideal para una promo real de tazas personalizadas.",
-    body: "Puede mostrar temporada, regalos para fechas especiales o un lanzamiento de colección.",
+    body: "Puede mostrar temporada, regalos para fechas especiales o un lanzamiento de colecciÃ³n.",
     buttonLabel: "Consultar promo",
     link: "https://wa.me/5491100000000",
     image: "./assets/stock/mug-wood-table.jpg",
@@ -141,9 +141,9 @@ const DEFAULT_BANNERS = {
   },
   mdf: {
     slot: "mdf",
-    eyebrow: "Colección MDF",
+    eyebrow: "ColecciÃ³n MDF",
     title: "Espacio perfecto para destacar una promo real de cajas, cofres o souvenirs.",
-    body: "Puede usarse para una campaña por cantidad, una línea destacada o un lanzamiento estacional.",
+    body: "Puede usarse para una campaÃ±a por cantidad, una lÃ­nea destacada o un lanzamiento estacional.",
     buttonLabel: "Consultar promo",
     link: "https://wa.me/5491100000000",
     image: "./assets/stock/craftsman-wood.jpg",
@@ -152,19 +152,19 @@ const DEFAULT_BANNERS = {
 };
 
 const SEARCH_INDEX = [
-  { name: "Taza infantil arcoiris", category: "Tazas", meta: "11 oz · Cerámica sublimable", image: "./assets/stock/mug-latte-hands.jpg", href: "./tazas.html?buscar=Taza%20infantil%20arcoiris" },
-  { name: "Taza infantil animales", category: "Tazas", meta: "11 oz · Cerámica sublimable", image: "./assets/stock/mug-wood-table.jpg", href: "./tazas.html?buscar=Taza%20infantil%20animales" },
-  { name: "Taza argentina clasica", category: "Tazas", meta: "11 oz · Cerámica sublimable", image: "./assets/stock/mug-latte-hands.jpg", href: "./tazas.html?buscar=Taza%20argentina%20clasica" },
-  { name: "Taza campeones premium", category: "Tazas", meta: "11 oz · Cerámica premium", image: "./assets/stock/mug-wood-table.jpg", href: "./tazas.html?buscar=Taza%20campeones%20premium" },
-  { name: "Taza corporativa blanca", category: "Tazas", meta: "11 oz · Cerámica corporativa", image: "./assets/stock/mug-latte-hands.jpg", href: "./tazas.html?buscar=Taza%20corporativa%20blanca" },
-  { name: "Caja Corazon Flex con Frases", category: "MDF", meta: "MDF 3 mm · 12 x 12 cm", image: "./assets/mdf-crops/9de52147-5143-484f-953b-9b92ae370091.jpg", href: "./mdf.html?buscar=Caja%20Corazon%20Flex%20con%20Frases" },
-  { name: "Cofre Redondo con Calado", category: "MDF", meta: "MDF 3 mm · 9 x 8 cm", image: "./assets/mdf-crops/16e32d21-3a61-4df9-9fa6-2df079e7d1df.jpg", href: "./mdf.html?buscar=Cofre%20Redondo%20con%20Calado" },
-  { name: "Caja Corazon Calado Etsy Grande", category: "MDF", meta: "MDF 3 mm · 15 x 15 cm", image: "./assets/mdf-crops/40b44245-9465-4464-8401-0308ec38b686.jpg", href: "./mdf.html?buscar=Caja%20Corazon%20Calado%20Etsy%20Grande" },
-  { name: "Caja Chica Etsy con Figuras", category: "MDF", meta: "MDF 3 mm · 6 x 6 cm", image: "./assets/mdf-crops/a5756954-1a27-4e14-87e1-a793544b28b0.jpg", href: "./mdf.html?buscar=Caja%20Chica%20Etsy%20con%20Figuras" },
-  { name: "Caja Corazon Flex Liso", category: "MDF", meta: "MDF 3 mm · 12 x 12 cm", image: "./assets/mdf-crops/c6508595-1daf-45e0-bac8-c602788d978f.jpg", href: "./mdf.html?buscar=Caja%20Corazon%20Flex%20Liso" },
-  { name: "Cofre Redondo Liso", category: "MDF", meta: "MDF 3 mm · 9 x 8 cm", image: "./assets/mdf-crops/d18be444-80cf-425d-9a95-4b5f84fea9ca.jpg", href: "./mdf.html?buscar=Cofre%20Redondo%20Liso" },
-  { name: "Caja Rectangular Tapa Calada", category: "MDF", meta: "MDF 3 mm · 13 x 8 cm", image: "./assets/mdf-crops/de7d0d38-f48f-401d-8b8a-07bdc85eff7b.jpg", href: "./mdf.html?buscar=Caja%20Rectangular%20Tapa%20Calada" },
-  { name: "Caja Rectangular Lisa", category: "MDF", meta: "MDF 3 mm · 13 x 8 cm", image: "./assets/mdf-crops/e05b3b72-b10d-486f-a3d6-e6e6b9ceea1e.jpg", href: "./mdf.html?buscar=Caja%20Rectangular%20Lisa" },
+  { name: "Taza infantil arcoiris", category: "Tazas", meta: "11 oz Â· CerÃ¡mica sublimable", image: "./assets/stock/mug-latte-hands.jpg", href: "./tazas.html?buscar=Taza%20infantil%20arcoiris" },
+  { name: "Taza infantil animales", category: "Tazas", meta: "11 oz Â· CerÃ¡mica sublimable", image: "./assets/stock/mug-wood-table.jpg", href: "./tazas.html?buscar=Taza%20infantil%20animales" },
+  { name: "Taza argentina clasica", category: "Tazas", meta: "11 oz Â· CerÃ¡mica sublimable", image: "./assets/stock/mug-latte-hands.jpg", href: "./tazas.html?buscar=Taza%20argentina%20clasica" },
+  { name: "Taza campeones premium", category: "Tazas", meta: "11 oz Â· CerÃ¡mica premium", image: "./assets/stock/mug-wood-table.jpg", href: "./tazas.html?buscar=Taza%20campeones%20premium" },
+  { name: "Taza corporativa blanca", category: "Tazas", meta: "11 oz Â· CerÃ¡mica corporativa", image: "./assets/stock/mug-latte-hands.jpg", href: "./tazas.html?buscar=Taza%20corporativa%20blanca" },
+  { name: "Caja Corazon Flex con Frases", category: "MDF", meta: "MDF 3 mm Â· 12 x 12 cm", image: "./assets/mdf-crops/9de52147-5143-484f-953b-9b92ae370091.jpg", href: "./mdf.html?buscar=Caja%20Corazon%20Flex%20con%20Frases" },
+  { name: "Cofre Redondo con Calado", category: "MDF", meta: "MDF 3 mm Â· 9 x 8 cm", image: "./assets/mdf-crops/16e32d21-3a61-4df9-9fa6-2df079e7d1df.jpg", href: "./mdf.html?buscar=Cofre%20Redondo%20con%20Calado" },
+  { name: "Caja Corazon Calado Etsy Grande", category: "MDF", meta: "MDF 3 mm Â· 15 x 15 cm", image: "./assets/mdf-crops/40b44245-9465-4464-8401-0308ec38b686.jpg", href: "./mdf.html?buscar=Caja%20Corazon%20Calado%20Etsy%20Grande" },
+  { name: "Caja Chica Etsy con Figuras", category: "MDF", meta: "MDF 3 mm Â· 6 x 6 cm", image: "./assets/mdf-crops/a5756954-1a27-4e14-87e1-a793544b28b0.jpg", href: "./mdf.html?buscar=Caja%20Chica%20Etsy%20con%20Figuras" },
+  { name: "Caja Corazon Flex Liso", category: "MDF", meta: "MDF 3 mm Â· 12 x 12 cm", image: "./assets/mdf-crops/c6508595-1daf-45e0-bac8-c602788d978f.jpg", href: "./mdf.html?buscar=Caja%20Corazon%20Flex%20Liso" },
+  { name: "Cofre Redondo Liso", category: "MDF", meta: "MDF 3 mm Â· 9 x 8 cm", image: "./assets/mdf-crops/d18be444-80cf-425d-9a95-4b5f84fea9ca.jpg", href: "./mdf.html?buscar=Cofre%20Redondo%20Liso" },
+  { name: "Caja Rectangular Tapa Calada", category: "MDF", meta: "MDF 3 mm Â· 13 x 8 cm", image: "./assets/mdf-crops/de7d0d38-f48f-401d-8b8a-07bdc85eff7b.jpg", href: "./mdf.html?buscar=Caja%20Rectangular%20Tapa%20Calada" },
+  { name: "Caja Rectangular Lisa", category: "MDF", meta: "MDF 3 mm Â· 13 x 8 cm", image: "./assets/mdf-crops/e05b3b72-b10d-486f-a3d6-e6e6b9ceea1e.jpg", href: "./mdf.html?buscar=Caja%20Rectangular%20Lisa" },
 ];
 
 const formatCurrency = (value) =>
@@ -393,7 +393,7 @@ const isAdminAccount = (account) =>
 const openAccountModal = () => {
   if (!accountModal || !accountOverlay) return;
   setAccountAuthNote("");
-  setAccountMode(accountMode);
+  setAccountMode("login");
   accountModal.hidden = false;
   accountOverlay.hidden = false;
   accountModal.setAttribute("aria-hidden", "false");
@@ -430,7 +430,7 @@ const setAccountMode = (mode = "login") => {
   }
   if (accountModalCopy) {
     accountModalCopy.textContent = isRegister
-      ? "Crea tu cuenta para seguir pedidos, guardar tus datos y comprar mas rapido."
+      ? "Crea tu cuenta para seguir pedidos, guardar tus datos y comprar más rápido."
       : "Accede a tu cuenta para ver tus datos, pedidos pendientes y estado del pedido actual.";
   }
   if (accountSubmit) {
@@ -440,7 +440,7 @@ const setAccountMode = (mode = "login") => {
     accountForgot.hidden = isRegister;
   }
   if (accountMetaText) {
-    accountMetaText.textContent = isRegister ? "Ya tienes cuenta?" : "No tienes usuario?";
+    accountMetaText.textContent = isRegister ? "¿Ya tienes cuenta?" : "¿No tienes usuario?";
   }
   if (accountRegister) {
     accountRegister.textContent = isRegister ? "Inicia sesión" : "Regístrate";
@@ -532,7 +532,7 @@ const renderSearchResults = (query = "") => {
   }
 
   if (!matches.length) {
-    searchResults.innerHTML = '<p class="search-empty">No encontramos productos con esa búsqueda.</p>';
+    searchResults.innerHTML = '<p class="search-empty">No encontramos productos con esa bÃºsqueda.</p>';
     return;
   }
 
@@ -543,7 +543,7 @@ const renderSearchResults = (query = "") => {
           <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}" />
           <span class="search-result-copy">
             <strong>${escapeHtml(item.name)}</strong>
-            <span>${escapeHtml(item.category)} · ${escapeHtml(item.meta)}</span>
+            <span>${escapeHtml(item.category)} Â· ${escapeHtml(item.meta)}</span>
           </span>
         </a>
       `
@@ -861,7 +861,7 @@ const renderAdminCatalogControls = () => {
         deleteButton.className = "admin-product-trash";
         deleteButton.setAttribute("data-admin-product-remove", productName);
         deleteButton.setAttribute("aria-label", `Borrar ${productName}`);
-        deleteButton.textContent = "🗑";
+        deleteButton.textContent = "ðŸ—‘";
         const actions = card.querySelector(".product-actions");
         actions?.appendChild(deleteButton);
       }
@@ -1020,7 +1020,7 @@ const updateCartView = () => {
               <button type="button" aria-label="Restar" data-cart-action="decrease" data-index="${index}">-</button>
               <strong>${item.quantity}</strong>
               <button type="button" aria-label="Sumar" data-cart-action="increase" data-index="${index}">+</button>
-              <button type="button" class="cart-remove" aria-label="Quitar" title="Quitar" data-cart-action="remove" data-index="${index}">🗑</button>
+              <button type="button" class="cart-remove" aria-label="Quitar" title="Quitar" data-cart-action="remove" data-index="${index}">ðŸ—‘</button>
             </div>
           </div>
         </article>
@@ -1418,13 +1418,13 @@ const setupAccount = () => {
         }
 
         if (password.length < 6) {
-          setAccountAuthNote("La contraseña debe tener al menos 6 caracteres.", "warning");
+          setAccountAuthNote("La contraseÃ±a debe tener al menos 6 caracteres.", "warning");
           accountPasswordInput?.focus();
           return;
         }
 
         if (password !== confirmPassword) {
-          setAccountAuthNote("La confirmación de contraseña no coincide.", "error");
+          setAccountAuthNote("La confirmaciÃ³n de contraseÃ±a no coincide.", "error");
           accountConfirmInput?.focus();
           return;
         }
@@ -1448,7 +1448,7 @@ const setupAccount = () => {
             return;
           }
 
-          setAccountAuthNote("Cuenta creada. Revisa tu correo para confirmarla y luego inicia sesión.", "success");
+          setAccountAuthNote("Cuenta creada. Revisa tu correo para confirmarla y luego Inicia sesión.", "success");
           setAccountMode("login");
           if (accountNameInput) accountNameInput.value = "";
           if (accountConfirmInput) accountConfirmInput.value = "";
@@ -1461,7 +1461,7 @@ const setupAccount = () => {
         });
 
         if (error) {
-          setAccountAuthNote("No se pudo iniciar sesión. Revisa tus datos e intenta nuevamente.", "error");
+          setAccountAuthNote("No se pudo Iniciar sesión. Revisa tus datos e intenta nuevamente.", "error");
           return;
         }
 
@@ -1505,7 +1505,7 @@ const setupAccount = () => {
         return;
       }
 
-      setAccountAuthNote("Te enviamos un correo para recuperar tu contraseña.", "success");
+      setAccountAuthNote("Te enviamos un correo para recuperar tu contraseÃ±a.", "success");
     });
   }
 
@@ -2120,3 +2120,4 @@ updateCheckoutView();
 if (yearTarget) {
   yearTarget.textContent = String(new Date().getFullYear());
 }
+
