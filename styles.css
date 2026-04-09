@@ -2174,6 +2174,8 @@ main section {
   .testimonial-grid > *,
   .promo-grid > * {
     scroll-snap-align: start;
+    width: 100%;
+    min-width: 100%;
   }
 
   .filter-bar {
@@ -2719,16 +2721,38 @@ main section {
     display: none;
   }
 
+  .showcase-visual,
+  .admin-stats {
+    grid-template-columns: 1fr;
+  }
+
   .showcase-mini-grid,
   .category-grid,
   .featured-grid,
   .value-grid,
   .steps-grid,
   .promo-grid,
-  .testimonial-grid,
-  .showcase-visual,
-  .admin-stats {
-    grid-template-columns: 1fr;
+  .testimonial-grid {
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(250px, 78vw);
+    grid-template-columns: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 10px;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .showcase-mini-grid > *,
+  .category-grid > *,
+  .featured-grid > *,
+  .value-grid > *,
+  .steps-grid > *,
+  .promo-grid > *,
+  .testimonial-grid > * {
+    width: 100%;
+    min-width: 100%;
+    scroll-snap-align: start;
   }
 
   .admin-tier-row {
