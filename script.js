@@ -915,7 +915,9 @@ const setupAccount = () => {
   }
 
   if (notificationsToggle) {
-    notificationsToggle.addEventListener("click", () => {
+    notificationsToggle.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
       closeAccountPanel();
 
       if (notificationsPanel?.hidden === false) {
@@ -927,7 +929,9 @@ const setupAccount = () => {
   }
 
   if (accountToggle) {
-    accountToggle.addEventListener("click", () => {
+    accountToggle.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
       const account = readAccount();
       closeNotificationsPanel();
       if (!account) {
@@ -1131,7 +1135,11 @@ const setupGlobalControlFallbacks = () => {
 
 const setupCartInteractions = () => {
   if (cartLaunch) {
-    cartLaunch.addEventListener("click", openCart);
+    cartLaunch.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      openCart();
+    });
     cartLaunch.addEventListener("animationend", () => {
       cartLaunch.classList.remove("is-bouncing");
     });
