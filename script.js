@@ -32,6 +32,11 @@ const DEFAULT_NOTIFICATIONS = [
 
 const menuButton = document.querySelector(".menu-toggle");
 const siteNav = document.querySelector(".site-nav");
+const searchToggle = document.querySelector(".search-toggle");
+const searchPanel = document.querySelector("#search-panel");
+const searchForm = document.querySelector("#header-search-form");
+const searchInput = document.querySelector("#header-search-input");
+const searchResults = document.querySelector("#header-search-results");
 const yearTarget = document.querySelector("#current-year");
 const contactForm = document.querySelector("#contact-form");
 const formNote = document.querySelector("#form-note");
@@ -108,7 +113,7 @@ const DEFAULT_BANNERS = {
     slot: "primary",
     eyebrow: "Promo de temporada",
     title: "Regalos personalizados para sorprender y vender mejor.",
-    body: "Este bloque puede cambiarse por promociones mensuales, packs o campanas especiales.",
+    body: "Este bloque puede cambiarse por promociones mensuales, packs o campañas especiales.",
     buttonLabel: "Consultar promo",
     link: "https://wa.me/5491100000000",
     image: "./assets/stock/hands-wrapping.jpg",
@@ -118,7 +123,7 @@ const DEFAULT_BANNERS = {
     slot: "secondary",
     eyebrow: "Arcarsu",
     title: "Aqui puede ir otra promo o una categoria destacada.",
-    body: "Este bloque puede adaptarse a una novedad, una campana visual o una linea principal del negocio.",
+    body: "Este bloque puede adaptarse a una novedad, una campaña visual o una línea principal del negocio.",
     buttonLabel: "Ver mas",
     link: "./contacto.html",
     image: "",
@@ -126,9 +131,9 @@ const DEFAULT_BANNERS = {
   },
   tazas: {
     slot: "tazas",
-    eyebrow: "Campana destacada",
+    eyebrow: "Campaña destacada",
     title: "Espacio ideal para una promo real de tazas personalizadas.",
-    body: "Puede mostrar temporada, regalos para fechas especiales o un lanzamiento de coleccion.",
+    body: "Puede mostrar temporada, regalos para fechas especiales o un lanzamiento de colección.",
     buttonLabel: "Consultar promo",
     link: "https://wa.me/5491100000000",
     image: "./assets/stock/mug-wood-table.jpg",
@@ -136,15 +141,31 @@ const DEFAULT_BANNERS = {
   },
   mdf: {
     slot: "mdf",
-    eyebrow: "Coleccion MDF",
+    eyebrow: "Colección MDF",
     title: "Espacio perfecto para destacar una promo real de cajas, cofres o souvenirs.",
-    body: "Puede usarse para una campana por cantidad, una linea destacada o un lanzamiento estacional.",
+    body: "Puede usarse para una campaña por cantidad, una línea destacada o un lanzamiento estacional.",
     buttonLabel: "Consultar promo",
     link: "https://wa.me/5491100000000",
     image: "./assets/stock/craftsman-wood.jpg",
     isActive: true,
   },
 };
+
+const SEARCH_INDEX = [
+  { name: "Taza infantil arcoiris", category: "Tazas", meta: "11 oz · Cerámica sublimable", image: "./assets/stock/mug-latte-hands.jpg", href: "./tazas.html?buscar=Taza%20infantil%20arcoiris" },
+  { name: "Taza infantil animales", category: "Tazas", meta: "11 oz · Cerámica sublimable", image: "./assets/stock/mug-wood-table.jpg", href: "./tazas.html?buscar=Taza%20infantil%20animales" },
+  { name: "Taza argentina clasica", category: "Tazas", meta: "11 oz · Cerámica sublimable", image: "./assets/stock/mug-latte-hands.jpg", href: "./tazas.html?buscar=Taza%20argentina%20clasica" },
+  { name: "Taza campeones premium", category: "Tazas", meta: "11 oz · Cerámica premium", image: "./assets/stock/mug-wood-table.jpg", href: "./tazas.html?buscar=Taza%20campeones%20premium" },
+  { name: "Taza corporativa blanca", category: "Tazas", meta: "11 oz · Cerámica corporativa", image: "./assets/stock/mug-latte-hands.jpg", href: "./tazas.html?buscar=Taza%20corporativa%20blanca" },
+  { name: "Caja Corazon Flex con Frases", category: "MDF", meta: "MDF 3 mm · 12 x 12 cm", image: "./assets/mdf-crops/9de52147-5143-484f-953b-9b92ae370091.jpg", href: "./mdf.html?buscar=Caja%20Corazon%20Flex%20con%20Frases" },
+  { name: "Cofre Redondo con Calado", category: "MDF", meta: "MDF 3 mm · 9 x 8 cm", image: "./assets/mdf-crops/16e32d21-3a61-4df9-9fa6-2df079e7d1df.jpg", href: "./mdf.html?buscar=Cofre%20Redondo%20con%20Calado" },
+  { name: "Caja Corazon Calado Etsy Grande", category: "MDF", meta: "MDF 3 mm · 15 x 15 cm", image: "./assets/mdf-crops/40b44245-9465-4464-8401-0308ec38b686.jpg", href: "./mdf.html?buscar=Caja%20Corazon%20Calado%20Etsy%20Grande" },
+  { name: "Caja Chica Etsy con Figuras", category: "MDF", meta: "MDF 3 mm · 6 x 6 cm", image: "./assets/mdf-crops/a5756954-1a27-4e14-87e1-a793544b28b0.jpg", href: "./mdf.html?buscar=Caja%20Chica%20Etsy%20con%20Figuras" },
+  { name: "Caja Corazon Flex Liso", category: "MDF", meta: "MDF 3 mm · 12 x 12 cm", image: "./assets/mdf-crops/c6508595-1daf-45e0-bac8-c602788d978f.jpg", href: "./mdf.html?buscar=Caja%20Corazon%20Flex%20Liso" },
+  { name: "Cofre Redondo Liso", category: "MDF", meta: "MDF 3 mm · 9 x 8 cm", image: "./assets/mdf-crops/d18be444-80cf-425d-9a95-4b5f84fea9ca.jpg", href: "./mdf.html?buscar=Cofre%20Redondo%20Liso" },
+  { name: "Caja Rectangular Tapa Calada", category: "MDF", meta: "MDF 3 mm · 13 x 8 cm", image: "./assets/mdf-crops/de7d0d38-f48f-401d-8b8a-07bdc85eff7b.jpg", href: "./mdf.html?buscar=Caja%20Rectangular%20Tapa%20Calada" },
+  { name: "Caja Rectangular Lisa", category: "MDF", meta: "MDF 3 mm · 13 x 8 cm", image: "./assets/mdf-crops/e05b3b72-b10d-486f-a3d6-e6e6b9ceea1e.jpg", href: "./mdf.html?buscar=Caja%20Rectangular%20Lisa" },
+];
 
 const formatCurrency = (value) =>
   new Intl.NumberFormat("es-AR", {
@@ -164,6 +185,13 @@ const escapeHtml = (value) =>
     };
     return map[char] || char;
   });
+
+const normalizeText = (value) =>
+  String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
 
 const readCart = () => {
   try {
@@ -340,6 +368,7 @@ const openCart = () => {
   if (!cartDrawer || !cartBackdrop || !cartLaunch) return;
   closeAccountPanel();
   closeNotificationsPanel();
+  closeSearchPanel();
   cartDrawer.classList.add("is-open");
   cartBackdrop.classList.add("is-open");
   cartLaunch.setAttribute("aria-expanded", "true");
@@ -397,7 +426,7 @@ const setAccountMode = (mode = "login") => {
     accountPasswordInput.setAttribute("autocomplete", isRegister ? "new-password" : "current-password");
   }
   if (accountModalTitle) {
-    accountModalTitle.textContent = isRegister ? "Crear cuenta" : "Iniciar sesion";
+    accountModalTitle.textContent = isRegister ? "Crear cuenta" : "Iniciar sesión";
   }
   if (accountModalCopy) {
     accountModalCopy.textContent = isRegister
@@ -414,7 +443,7 @@ const setAccountMode = (mode = "login") => {
     accountMetaText.textContent = isRegister ? "Ya tienes cuenta?" : "No tienes usuario?";
   }
   if (accountRegister) {
-    accountRegister.textContent = isRegister ? "Inicia sesion" : "Registrate";
+    accountRegister.textContent = isRegister ? "Inicia sesión" : "Regístrate";
   }
 };
 
@@ -434,6 +463,7 @@ const setAccountAuthNote = (message, tone = "info") => {
 
 const openAccountPanel = () => {
   if (!accountPanel || !accountToggle) return;
+  closeSearchPanel();
   accountPanel.hidden = false;
   accountToggle.setAttribute("aria-expanded", "true");
 };
@@ -446,6 +476,7 @@ const closeAccountPanel = () => {
 
 const openNotificationsPanel = () => {
   if (!notificationsPanel || !notificationsToggle) return;
+  closeSearchPanel();
   notificationsPanel.hidden = false;
   notificationsToggle.setAttribute("aria-expanded", "true");
 };
@@ -454,6 +485,136 @@ const closeNotificationsPanel = () => {
   if (!notificationsPanel || !notificationsToggle) return;
   notificationsPanel.hidden = true;
   notificationsToggle.setAttribute("aria-expanded", "false");
+};
+
+const openSearchPanel = () => {
+  if (!searchPanel || !searchToggle) return;
+  searchPanel.hidden = false;
+  searchToggle.setAttribute("aria-expanded", "true");
+};
+
+const closeSearchPanel = () => {
+  if (!searchPanel || !searchToggle) return;
+  searchPanel.hidden = true;
+  searchToggle.setAttribute("aria-expanded", "false");
+};
+
+const getSearchMatches = (query) => {
+  const normalizedQuery = normalizeText(query);
+  if (!normalizedQuery) return SEARCH_INDEX.slice(0, 6);
+
+  return SEARCH_INDEX.filter((item) => {
+    const haystack = normalizeText(`${item.name} ${item.category} ${item.meta}`);
+    return haystack.includes(normalizedQuery);
+  }).slice(0, 8);
+};
+
+const renderSearchResults = (query = "") => {
+  if (!searchResults) return;
+  const matches = getSearchMatches(query);
+
+  if (!query.trim()) {
+    searchResults.innerHTML = `
+      <a class="search-result search-result-shortcut" href="./tazas.html">
+        <span class="search-result-copy">
+          <strong>Ir a Tazas</strong>
+          <span>Explora lineas infantiles, corporativas y premium.</span>
+        </span>
+      </a>
+      <a class="search-result search-result-shortcut" href="./mdf.html">
+        <span class="search-result-copy">
+          <strong>Ir a MDF</strong>
+          <span>Busca cajas, cofres y piezas para regalos o cantidad.</span>
+        </span>
+      </a>
+    `;
+    return;
+  }
+
+  if (!matches.length) {
+    searchResults.innerHTML = '<p class="search-empty">No encontramos productos con esa búsqueda.</p>';
+    return;
+  }
+
+  searchResults.innerHTML = matches
+    .map(
+      (item) => `
+        <a class="search-result" href="${escapeHtml(item.href)}">
+          <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}" />
+          <span class="search-result-copy">
+            <strong>${escapeHtml(item.name)}</strong>
+            <span>${escapeHtml(item.category)} · ${escapeHtml(item.meta)}</span>
+          </span>
+        </a>
+      `
+    )
+    .join("");
+};
+
+const applyCatalogSearchFromUrl = () => {
+  if (!catalogProductCards.length) return;
+
+  const query = new URLSearchParams(window.location.search).get("buscar");
+  const normalizedQuery = normalizeText(query);
+  if (!normalizedQuery) return;
+
+  let firstMatch = null;
+
+  catalogProductCards.forEach((card) => {
+    const searchable = normalizeText(card.textContent);
+    const match = searchable.includes(normalizedQuery);
+    card.classList.toggle("search-hidden", !match);
+    if (match && !firstMatch) {
+      firstMatch = card;
+    }
+  });
+
+  if (firstMatch instanceof HTMLElement) {
+    firstMatch.classList.add("search-focus");
+    window.setTimeout(() => firstMatch.classList.remove("search-focus"), 2200);
+    window.requestAnimationFrame(() => {
+      firstMatch.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+  }
+};
+
+const setupSearch = () => {
+  if (!searchToggle || !searchPanel || !searchInput || !searchResults) {
+    applyCatalogSearchFromUrl();
+    return;
+  }
+
+  renderSearchResults("");
+  applyCatalogSearchFromUrl();
+
+  searchToggle.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    closeAccountPanel();
+    closeNotificationsPanel();
+
+    if (searchPanel.hidden === false) {
+      closeSearchPanel();
+      return;
+    }
+
+    openSearchPanel();
+    renderSearchResults(searchInput.value);
+    window.setTimeout(() => searchInput.focus(), 20);
+  });
+
+  searchInput.addEventListener("input", () => {
+    renderSearchResults(searchInput.value);
+  });
+
+  if (searchForm) {
+    searchForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const matches = getSearchMatches(searchInput.value);
+      if (!matches.length) return;
+      window.location.href = matches[0].href;
+    });
+  }
 };
 
 const renderNotifications = async () => {
@@ -660,7 +821,7 @@ const renderAccountState = () => {
   const account = readAccount();
 
   if (accountTriggerText) {
-    accountTriggerText.textContent = account?.name || "Iniciar sesion";
+    accountTriggerText.textContent = account?.name || "Iniciar sesión";
   }
 
   if (accountUser) {
@@ -1193,6 +1354,7 @@ const setupAccount = () => {
       event.preventDefault();
       event.stopPropagation();
       closeAccountPanel();
+      closeSearchPanel();
 
       if (notificationsPanel?.hidden === false) {
         closeNotificationsPanel();
@@ -1208,6 +1370,7 @@ const setupAccount = () => {
       event.stopPropagation();
       const account = readAccount();
       closeNotificationsPanel();
+      closeSearchPanel();
       if (!account) {
         openAccountModal();
         return;
@@ -1255,13 +1418,13 @@ const setupAccount = () => {
         }
 
         if (password.length < 6) {
-          setAccountAuthNote("La contrasena debe tener al menos 6 caracteres.", "warning");
+          setAccountAuthNote("La contraseña debe tener al menos 6 caracteres.", "warning");
           accountPasswordInput?.focus();
           return;
         }
 
         if (password !== confirmPassword) {
-          setAccountAuthNote("La confirmacion de contrasena no coincide.", "error");
+          setAccountAuthNote("La confirmación de contraseña no coincide.", "error");
           accountConfirmInput?.focus();
           return;
         }
@@ -1285,7 +1448,7 @@ const setupAccount = () => {
             return;
           }
 
-          setAccountAuthNote("Cuenta creada. Revisa tu correo para confirmarla y luego inicia sesion.", "success");
+          setAccountAuthNote("Cuenta creada. Revisa tu correo para confirmarla y luego inicia sesión.", "success");
           setAccountMode("login");
           if (accountNameInput) accountNameInput.value = "";
           if (accountConfirmInput) accountConfirmInput.value = "";
@@ -1298,7 +1461,7 @@ const setupAccount = () => {
         });
 
         if (error) {
-          setAccountAuthNote("No se pudo iniciar sesion. Revisa tus datos e intenta nuevamente.", "error");
+          setAccountAuthNote("No se pudo iniciar sesión. Revisa tus datos e intenta nuevamente.", "error");
           return;
         }
 
@@ -1342,7 +1505,7 @@ const setupAccount = () => {
         return;
       }
 
-      setAccountAuthNote("Te enviamos un correo para recuperar tu contrasena.", "success");
+      setAccountAuthNote("Te enviamos un correo para recuperar tu contraseña.", "success");
     });
   }
 
@@ -1399,9 +1562,11 @@ const setupAccount = () => {
     const target = event.target;
     const element = target instanceof Element ? target : null;
     if (element?.closest(".account-area")) return;
+    if (element?.closest(".search-area")) return;
     if (element?.closest(".cart-launch")) return;
     closeAccountPanel();
     closeNotificationsPanel();
+    closeSearchPanel();
   });
 
   document.addEventListener("keydown", (event) => {
@@ -1410,6 +1575,7 @@ const setupAccount = () => {
     closeAccountModal();
     closeAccountPanel();
     closeNotificationsPanel();
+    closeSearchPanel();
   });
 
   setAccountMode("login");
@@ -1424,7 +1590,23 @@ const setupGlobalControlFallbacks = () => {
     const cartButton = element.closest(".cart-launch");
     if (cartButton instanceof HTMLElement) {
       event.preventDefault();
+      closeSearchPanel();
       openCart();
+      return;
+    }
+
+    const searchButton = element.closest(".search-toggle");
+    if (searchButton instanceof HTMLElement) {
+      event.preventDefault();
+      closeAccountPanel();
+      closeNotificationsPanel();
+      if (searchPanel?.hidden === false) {
+        closeSearchPanel();
+      } else {
+        openSearchPanel();
+        renderSearchResults(searchInput?.value || "");
+        window.setTimeout(() => searchInput?.focus(), 20);
+      }
       return;
     }
 
@@ -1432,6 +1614,7 @@ const setupGlobalControlFallbacks = () => {
     if (notificationsButton instanceof HTMLElement) {
       event.preventDefault();
       closeAccountPanel();
+      closeSearchPanel();
       if (notificationsPanel?.hidden === false) {
         closeNotificationsPanel();
       } else {
@@ -1445,6 +1628,7 @@ const setupGlobalControlFallbacks = () => {
       event.preventDefault();
       const account = readAccount();
       closeNotificationsPanel();
+      closeSearchPanel();
       if (!account) {
         openAccountModal();
         return;
@@ -1919,6 +2103,7 @@ const setupClickableCards = () => {
 };
 
 setupMenu();
+setupSearch();
 setupContactForm();
 setupAccount();
 setupGlobalControlFallbacks();

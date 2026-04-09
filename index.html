@@ -27,6 +27,23 @@
 
           <div class="header-tools">
             <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+            <div class="search-area">
+              <button class="search-toggle" type="button" aria-expanded="false" aria-controls="search-panel" aria-label="Buscar productos">
+                <span class="search-toggle-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" role="img" focusable="false">
+                    <path d="M10.5 4a6.5 6.5 0 1 0 4.03 11.6l4.44 4.44a1 1 0 0 0 1.41-1.42l-4.44-4.44A6.5 6.5 0 0 0 10.5 4Zm0 2a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9Z"></path>
+                  </svg>
+                </span>
+                <span class="search-toggle-text">Buscar</span>
+              </button>
+              <div class="search-panel" id="search-panel" hidden>
+                <form class="search-form" id="header-search-form">
+                  <input id="header-search-input" type="search" placeholder="Buscar tazas o MDF" autocomplete="off" />
+                  <button class="search-submit" type="submit">Ir</button>
+                </form>
+                <div class="search-results" id="header-search-results"></div>
+              </div>
+            </div>
             <div class="account-area">
               <div class="notifications-area">
                 <button class="notifications-toggle" type="button" aria-expanded="false" aria-controls="notifications-panel" aria-label="Notificaciones">
@@ -374,9 +391,9 @@
       <div class="account-overlay" id="account-overlay" hidden></div>
       <div class="account-modal" id="account-modal" hidden aria-hidden="true">
         <div class="account-modal-card" role="dialog" aria-modal="true" aria-labelledby="account-modal-title">
-          <button class="account-modal-close" type="button" aria-label="Cerrar inicio de sesion">x</button>
+          <button class="account-modal-close" type="button" aria-label="Cerrar inicio de sesión">x</button>
           <span class="eyebrow">Mi cuenta</span>
-          <h2 id="account-modal-title">Iniciar sesion</h2>
+          <h2 id="account-modal-title">Iniciar sesión</h2>
           <p id="account-modal-copy">Accede a tu cuenta para ver tus datos, pedidos pendientes y estado del pedido actual.</p>
           <div class="account-mode-switch" role="tablist" aria-label="Modo de cuenta">
             <button class="account-mode-chip is-active" type="button" id="account-mode-login" data-account-mode="login">Entrar</button>
@@ -393,12 +410,12 @@
               <input id="account-email" name="email" type="email" placeholder="tuemail@correo.com" autocomplete="email" required />
             </div>
             <div class="field">
-              <label for="account-password">Contrasena</label>
-              <input id="account-password" name="password" type="password" placeholder="Ingresa tu contrasena" autocomplete="current-password" required />
+              <label for="account-password">Contraseña</label>
+              <input id="account-password" name="password" type="password" placeholder="Ingresa tu contraseña" autocomplete="current-password" required />
             </div>
             <div class="field" id="account-confirm-field" hidden>
-              <label for="account-confirm-password">Confirmar contrasena</label>
-              <input id="account-confirm-password" name="confirmPassword" type="password" placeholder="Repite tu contrasena" autocomplete="new-password" />
+              <label for="account-confirm-password">Confirmar contraseña</label>
+              <input id="account-confirm-password" name="confirmPassword" type="password" placeholder="Repite tu contraseña" autocomplete="new-password" />
             </div>
             <div class="account-form-actions">
               <button class="button button-dark account-submit" type="submit" id="account-submit">Ingresar</button>
