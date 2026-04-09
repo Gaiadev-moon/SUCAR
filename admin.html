@@ -99,25 +99,34 @@
           </article>
 
           <div class="admin-content" id="admin-content" hidden>
-            <section class="admin-stats">
-              <article class="admin-stat-card">
-                <span class="eyebrow">Pedidos</span>
-                <strong id="admin-orders-count">0</strong>
-                <p>Total de pedidos registrados desde checkout.</p>
-              </article>
-              <article class="admin-stat-card">
-                <span class="eyebrow">Pendientes</span>
-                <strong id="admin-pending-count">0</strong>
-                <p>Pedidos que aun necesitan gestion o cierre.</p>
-              </article>
-              <article class="admin-stat-card">
-                <span class="eyebrow">Articulos</span>
-                <strong id="admin-products-count">0</strong>
-                <p>Articulos cargados desde este panel administrativo.</p>
-              </article>
+            <div class="admin-tabs" role="tablist" aria-label="Secciones del panel admin">
+              <button class="admin-tab is-active" type="button" data-admin-tab="overview">Resumen</button>
+              <button class="admin-tab" type="button" data-admin-tab="orders">Pedidos</button>
+              <button class="admin-tab" type="button" data-admin-tab="catalog">Catalogo</button>
+              <button class="admin-tab" type="button" data-admin-tab="banners">Banners</button>
+            </div>
+
+            <section class="admin-panel is-active" data-admin-section="overview">
+              <section class="admin-stats">
+                <article class="admin-stat-card">
+                  <span class="eyebrow">Pedidos</span>
+                  <strong id="admin-orders-count">0</strong>
+                  <p>Total de pedidos registrados desde checkout.</p>
+                </article>
+                <article class="admin-stat-card">
+                  <span class="eyebrow">Pendientes</span>
+                  <strong id="admin-pending-count">0</strong>
+                  <p>Pedidos que aun necesitan gestion o cierre.</p>
+                </article>
+                <article class="admin-stat-card">
+                  <span class="eyebrow">Articulos</span>
+                  <strong id="admin-products-count">0</strong>
+                  <p>Articulos cargados desde este panel administrativo.</p>
+                </article>
+              </section>
             </section>
 
-            <section class="admin-grid">
+            <section class="admin-panel" data-admin-section="orders" hidden>
               <article class="admin-card">
                 <div class="admin-card-head">
                   <span class="eyebrow">Pedidos</span>
@@ -125,11 +134,13 @@
                 </div>
                 <div class="admin-orders-list" id="admin-orders"></div>
               </article>
+            </section>
 
+            <section class="admin-panel" data-admin-section="catalog" hidden>
               <article class="admin-card">
                 <div class="admin-card-head">
                   <span class="eyebrow">Catalogo</span>
-                  <h3>Agregar o quitar articulos</h3>
+                  <h3>Agregar, editar o quitar articulos</h3>
                 </div>
                 <form class="admin-form" id="admin-product-form">
                   <input type="hidden" name="productId" />
@@ -139,7 +150,10 @@
                   </div>
                   <div class="field">
                     <label for="admin-product-category">Categoria</label>
-                    <input id="admin-product-category" name="category" type="text" placeholder="Tazas, MDF, cofres, cajas..." required />
+                    <select id="admin-product-category" name="category" required>
+                      <option value="Tazas">Tazas</option>
+                      <option value="MDF">MDF</option>
+                    </select>
                   </div>
                   <div class="field">
                     <label for="admin-product-material">Material</label>
@@ -149,15 +163,10 @@
                     <label for="admin-product-measure">Medidas</label>
                     <input id="admin-product-measure" name="measure" type="text" placeholder="11 oz, 12 x 12 cm..." required />
                   </div>
-                  <div class="admin-form-grid">
-                    <div class="field">
-                      <label for="admin-product-price24">Precio x24</label>
-                      <input id="admin-product-price24" name="price24" type="number" min="0" placeholder="0" required />
-                    </div>
-                    <div class="field">
-                      <label for="admin-product-price48">Precio x48</label>
-                      <input id="admin-product-price48" name="price48" type="number" min="0" placeholder="0" required />
-                    </div>
+                  <div class="field">
+                    <label>Precios por cantidad</label>
+                    <div class="admin-tier-list" id="admin-tier-list"></div>
+                    <button class="button button-light admin-tier-add" type="button" id="admin-tier-add">Agregar otro precio</button>
                   </div>
                   <div class="field">
                     <label for="admin-product-image">Imagen</label>
@@ -170,18 +179,22 @@
                 </form>
                 <div class="admin-products-list" id="admin-products-list"></div>
               </article>
+            </section>
 
+            <section class="admin-panel" data-admin-section="banners" hidden>
               <article class="admin-card">
                 <div class="admin-card-head">
                   <span class="eyebrow">Promociones</span>
-                  <h3>Cambiar banners promocionales</h3>
+                  <h3>Cambiar banners de inicio, tazas y MDF</h3>
                 </div>
                 <form class="admin-form" id="admin-banner-form">
                   <div class="field">
                     <label for="admin-banner-slot">Banner</label>
                     <select id="admin-banner-slot" name="slot" required>
-                      <option value="primary">Banner principal</option>
-                      <option value="secondary">Banner secundario</option>
+                      <option value="primary">Inicio principal</option>
+                      <option value="secondary">Inicio secundario</option>
+                      <option value="tazas">Banner Tazas</option>
+                      <option value="mdf">Banner MDF</option>
                     </select>
                   </div>
                   <div class="field">

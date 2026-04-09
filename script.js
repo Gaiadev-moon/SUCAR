@@ -75,9 +75,20 @@ const adminProductsCount = document.querySelector("#admin-products-count");
 const adminProductForm = document.querySelector("#admin-product-form");
 const adminProductsList = document.querySelector("#admin-products-list");
 const adminProductCancel = document.querySelector("#admin-product-cancel");
+const adminTierList = document.querySelector("#admin-tier-list");
+const adminTierAdd = document.querySelector("#admin-tier-add");
 const adminBannerForm = document.querySelector("#admin-banner-form");
 const adminBannersList = document.querySelector("#admin-banners-list");
+const adminTabs = document.querySelectorAll("[data-admin-tab]");
+const adminPanels = document.querySelectorAll("[data-admin-section]");
 const homeBannerNodes = document.querySelectorAll("[data-home-banner]");
+
+const BANNER_LABELS = {
+  primary: "Inicio principal",
+  secondary: "Inicio secundario",
+  tazas: "Banner de tazas",
+  mdf: "Banner de MDF",
+};
 
 const DEFAULT_BANNERS = {
   primary: {
@@ -97,6 +108,24 @@ const DEFAULT_BANNERS = {
     buttonLabel: "Ver mas",
     link: "./contacto.html",
     image: "",
+  },
+  tazas: {
+    slot: "tazas",
+    eyebrow: "Campana destacada",
+    title: "Espacio ideal para una promo real de tazas personalizadas.",
+    body: "Puede mostrar temporada, regalos para fechas especiales o un lanzamiento de coleccion.",
+    buttonLabel: "Consultar promo",
+    link: "https://wa.me/5491100000000",
+    image: "./assets/stock/mug-wood-table.jpg",
+  },
+  mdf: {
+    slot: "mdf",
+    eyebrow: "Coleccion MDF",
+    title: "Espacio perfecto para destacar una promo real de cajas, cofres o souvenirs.",
+    body: "Puede usarse para una campana por cantidad, una linea destacada o un lanzamiento estacional.",
+    buttonLabel: "Consultar promo",
+    link: "https://wa.me/5491100000000",
+    image: "./assets/stock/craftsman-wood.jpg",
   },
 };
 
@@ -184,6 +213,74 @@ const writeBanners = (banners) => {
   localStorage.setItem(BANNERS_KEY, JSON.stringify(banners));
 };
 
+const normalizePriceTiers = (tiers) => {
+  const normalized = (Array.isArray(tiers) ? tiers : [])
+    .map((tier) => ({
+      minQty: Number(tier?.minQty || tier?.quantity || 0),
+      unitPrice: Number(tier?.unitPrice || tier?.price || 0),
+    }))
+    .filter((tier) => tier.minQty > 0 && tier.unitPrice >= 0)
+    .sort((a, b) => a.minQty - b.minQty);
+
+  return normalized.length
+    ? normalized
+    : [
+        { minQty: 24, unitPrice: 0 },
+        { minQty: 48, unitPrice: 0 },
+      ];
+};
+
+const getProductPriceTiers = (product) =>
+  normalizePriceTiers(
+    product?.priceTiers || [
+      { minQty: 24, unitPrice: Number(product?.price24 || 0) },
+      { minQty: 48, unitPrice: Number(product?.price48 || 0) },
+    ]
+  );
+
+const renderAdminTierRows = (tiers = null) => {
+  if (!adminTierList) return;
+
+  const items = normalizePriceTiers(tiers || [
+    { minQty: 24, unitPrice: 0 },
+    { minQty: 48, unitPrice: 0 },
+  ]);
+
+  adminTierList.innerHTML = items
+    .map(
+      (tier, index) => `
+        <div class="admin-tier-row">
+          <div class="field">
+            <label>Cantidad minima</label>
+            <input type="number" min="1" name="tierQty" value="${escapeHtml(tier.minQty)}" required />
+          </div>
+          <div class="field">
+            <label>Precio por unidad</label>
+            <input type="number" min="1" name="tierPrice" value="${escapeHtml(tier.unitPrice)}" required />
+          </div>
+          <button class="admin-delete admin-tier-remove" type="button" data-tier-remove="${index}">Quitar</button>
+        </div>
+      `
+    )
+    .join("");
+};
+
+const readAdminTierRows = () => {
+  if (!adminTierList) return normalizePriceTiers([]);
+
+  const rows = Array.from(adminTierList.querySelectorAll(".admin-tier-row"));
+  return normalizePriceTiers(
+    rows.map((row) => {
+      const quantityInput = row.querySelector('input[name="tierQty"]');
+      const priceInput = row.querySelector('input[name="tierPrice"]');
+      return {
+        minQty: Number(quantityInput?.value || 0),
+        unitPrice: Number(priceInput?.value || 0),
+      };
+    })
+  );
+};
+
 const resetAdminProductForm = () => {
   if (!adminProductForm) return;
   adminProductForm.reset();
@@ -191,6 +288,7 @@ const resetAdminProductForm = () => {
   if (productIdField instanceof HTMLInputElement) {
     productIdField.value = "";
   }
+  renderAdminTierRows();
   if (adminProductCancel) {
     adminProductCancel.hidden = true;
   }
@@ -331,10 +429,10 @@ const applyBannerData = (slot, data) => {
   const banner = document.querySelector(`[data-home-banner="${slot}"]`);
   if (!banner || !data) return;
 
-  const eyebrow = banner.querySelector("[data-banner-eyebrow]");
-  const title = banner.querySelector("[data-banner-title]");
-  const body = banner.querySelector("[data-banner-body]");
-  const button = banner.querySelector("[data-banner-button]");
+  const eyebrow = banner.querySelector("[data-banner-eyebrow]") || banner.querySelector(".eyebrow");
+  const title = banner.querySelector("[data-banner-title]") || banner.querySelector("h3");
+  const body = banner.querySelector("[data-banner-body]") || banner.querySelector(".promo-content p");
+  const button = banner.querySelector("[data-banner-button]") || banner.querySelector(".promo-content a");
   const image = banner.querySelector("[data-banner-image]");
 
   if (eyebrow) eyebrow.textContent = data.eyebrow || "";
@@ -379,13 +477,14 @@ const renderSiteBanners = async () => {
     }
   } catch {}
 
-  const mergedBanners = {
-    primary: { ...DEFAULT_BANNERS.primary, ...(banners.primary || {}) },
-    secondary: { ...DEFAULT_BANNERS.secondary, ...(banners.secondary || {}) },
-  };
+  const mergedBanners = Object.keys(DEFAULT_BANNERS).reduce((acc, key) => {
+    acc[key] = { ...DEFAULT_BANNERS[key], ...(banners[key] || {}) };
+    return acc;
+  }, {});
 
-  applyBannerData("primary", mergedBanners.primary);
-  applyBannerData("secondary", mergedBanners.secondary);
+  Object.entries(mergedBanners).forEach(([slot, banner]) => {
+    applyBannerData(slot, banner);
+  });
 
   if (adminBannersList) {
     adminBannersList.innerHTML = Object.values(mergedBanners)
@@ -393,7 +492,7 @@ const renderSiteBanners = async () => {
         (banner) => `
           <article class="admin-banner-card">
             <div>
-              <strong>${escapeHtml(banner.slot === "primary" ? "Banner principal" : "Banner secundario")}</strong>
+              <strong>${escapeHtml(BANNER_LABELS[banner.slot] || banner.slot)}</strong>
               <p>${escapeHtml(banner.title)}</p>
             </div>
             <div class="admin-banner-meta">
@@ -781,12 +880,12 @@ const renderAdminProducts = async () => {
   let products = readAdminProducts();
 
   if (supabaseClient) {
-    const { data } = await supabaseClient
-      .from("admin_products")
-      .select("id, name, category, material, measure, price_24, price_48, image_url")
-      .order("created_at", { ascending: false });
+    const { data, error } = await supabaseClient
+        .from("admin_products")
+        .select("id, name, category, material, measure, price_24, price_48, price_tiers, image_url")
+        .order("created_at", { ascending: false });
 
-    if (data) {
+    if (!error && data) {
       products = data.map((product) => ({
         id: product.id,
         name: product.name,
@@ -795,8 +894,35 @@ const renderAdminProducts = async () => {
         measure: product.measure,
         price24: Number(product.price_24 || 0),
         price48: Number(product.price_48 || 0),
+        priceTiers: getProductPriceTiers({
+          price24: Number(product.price_24 || 0),
+          price48: Number(product.price_48 || 0),
+          priceTiers: product.price_tiers,
+        }),
         image: product.image_url || "",
       }));
+    } else {
+      const { data: fallbackData } = await supabaseClient
+        .from("admin_products")
+        .select("id, name, category, material, measure, price_24, price_48, image_url")
+        .order("created_at", { ascending: false });
+
+      if (fallbackData) {
+        products = fallbackData.map((product) => ({
+          id: product.id,
+          name: product.name,
+          category: product.category,
+          material: product.material,
+          measure: product.measure,
+          price24: Number(product.price_24 || 0),
+          price48: Number(product.price_48 || 0),
+          priceTiers: getProductPriceTiers({
+            price24: Number(product.price_24 || 0),
+            price48: Number(product.price_48 || 0),
+          }),
+          image: product.image_url || "",
+        }));
+      }
     }
   }
 
@@ -809,22 +935,42 @@ const renderAdminProducts = async () => {
 
   adminProductsList.innerHTML = products
     .map(
-      (product, index) => `
+      (product, index) => {
+        const tiers = getProductPriceTiers(product);
+        return `
         <article class="admin-product-card">
           <div>
             <strong>${escapeHtml(product.name)}</strong>
             <p>${escapeHtml(product.category)} - ${escapeHtml(product.material)} - ${escapeHtml(product.measure)}</p>
+            <div class="admin-tier-summary">
+              ${tiers
+                .map((tier) => `<span>Desde ${escapeHtml(tier.minQty)}: ${formatCurrency(tier.unitPrice)}</span>`)
+                .join("")}
+            </div>
           </div>
           <div class="admin-product-meta">
-            <span>x24 ${formatCurrency(product.price24)}</span>
-            <span>x48 ${formatCurrency(product.price48)}</span>
-            <button class="button button-light admin-edit" type="button" data-product-edit="${index}" data-product-id="${escapeHtml(product.id || "")}" data-product-name="${escapeHtml(product.name)}" data-product-category="${escapeHtml(product.category)}" data-product-material="${escapeHtml(product.material)}" data-product-measure="${escapeHtml(product.measure)}" data-product-price24="${escapeHtml(product.price24)}" data-product-price48="${escapeHtml(product.price48)}" data-product-image-value="${escapeHtml(product.image || "")}">Editar</button>
+            <button class="button button-light admin-edit" type="button" data-product-edit="${index}" data-product-id="${escapeHtml(product.id || "")}" data-product-name="${escapeHtml(product.name)}" data-product-category="${escapeHtml(product.category)}" data-product-material="${escapeHtml(product.material)}" data-product-measure="${escapeHtml(product.measure)}" data-product-price-tiers="${escapeHtml(JSON.stringify(tiers))}" data-product-image-value="${escapeHtml(product.image || "")}">Editar</button>
             <button class="admin-delete" type="button" data-product-delete="${index}" data-product-id="${escapeHtml(product.id || "")}">Quitar</button>
           </div>
         </article>
-      `
+      `;
+      }
     )
     .join("");
+};
+
+const setAdminTab = (tabName = "overview") => {
+  adminTabs.forEach((tab) => {
+    const isActive = tab.dataset.adminTab === tabName;
+    tab.classList.toggle("is-active", isActive);
+    tab.setAttribute("aria-selected", String(isActive));
+  });
+
+  adminPanels.forEach((panel) => {
+    const isActive = panel.dataset.adminSection === tabName;
+    panel.classList.toggle("is-active", isActive);
+    panel.hidden = !isActive;
+  });
 };
 
 const renderAdminPage = async () => {
@@ -841,6 +987,10 @@ const renderAdminPage = async () => {
   await renderSiteBanners();
   await renderAdminOrders();
   await renderAdminProducts();
+  if (adminPanels.length) {
+    const activeTab = document.querySelector("[data-admin-tab].is-active")?.getAttribute("data-admin-tab") || "overview";
+    setAdminTab(activeTab);
+  }
 };
 
 const addCartItem = (button) => {
@@ -1326,14 +1476,18 @@ const setupAdmin = () => {
 
       const data = new FormData(adminProductForm);
       const productId = String(data.get("productId") || "").trim();
+      const priceTiers = readAdminTierRows();
+      const price24 = priceTiers.find((tier) => tier.minQty === 24)?.unitPrice || priceTiers[0]?.unitPrice || 0;
+      const price48 = priceTiers.find((tier) => tier.minQty === 48)?.unitPrice || priceTiers[1]?.unitPrice || priceTiers[0]?.unitPrice || 0;
       const product = {
         id: productId,
         name: String(data.get("name") || "").trim(),
         category: String(data.get("category") || "").trim(),
         material: String(data.get("material") || "").trim(),
         measure: String(data.get("measure") || "").trim(),
-        price24: Number(data.get("price24") || 0),
-        price48: Number(data.get("price48") || 0),
+        price24,
+        price48,
+        priceTiers,
         image: String(data.get("image") || "").trim(),
       };
 
@@ -1347,13 +1501,38 @@ const setupAdmin = () => {
           measure: product.measure,
           price_24: product.price24,
           price_48: product.price48,
+          price_tiers: product.priceTiers,
           image_url: product.image,
         };
 
-        if (productId) {
-          await supabaseClient.from("admin_products").update(payload).eq("id", productId);
-        } else {
-          await supabaseClient.from("admin_products").insert(payload);
+        let response;
+        try {
+          if (productId) {
+            response = await supabaseClient.from("admin_products").update(payload).eq("id", productId);
+          } else {
+            response = await supabaseClient.from("admin_products").insert(payload);
+          }
+        } catch {
+          response = { error: new Error("fallback") };
+        }
+
+        if (response?.error) {
+          const fallbackPayload = {
+            created_by: account?.id || null,
+            name: product.name,
+            category: product.category,
+            material: product.material,
+            measure: product.measure,
+            price_24: product.price24,
+            price_48: product.price48,
+            image_url: product.image,
+          };
+
+          if (productId) {
+            await supabaseClient.from("admin_products").update(fallbackPayload).eq("id", productId);
+          } else {
+            await supabaseClient.from("admin_products").insert(fallbackPayload);
+          }
         }
       } else {
         const products = readAdminProducts();
@@ -1379,6 +1558,32 @@ const setupAdmin = () => {
     });
   }
 
+  if (adminTierAdd) {
+    adminTierAdd.addEventListener("click", () => {
+      const tiers = readAdminTierRows();
+      const nextQty = (tiers[tiers.length - 1]?.minQty || 0) + 24 || 24;
+      tiers.push({ minQty: nextQty, unitPrice: 0 });
+      renderAdminTierRows(tiers);
+    });
+  }
+
+  if (adminTierList) {
+    adminTierList.addEventListener("click", (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLElement)) return;
+
+      const removeButton = target.closest("[data-tier-remove]");
+      if (!(removeButton instanceof HTMLElement)) return;
+
+      const index = Number(removeButton.dataset.tierRemove);
+      if (Number.isNaN(index)) return;
+
+      const tiers = readAdminTierRows();
+      tiers.splice(index, 1);
+      renderAdminTierRows(tiers.length ? tiers : [{ minQty: 24, unitPrice: 0 }]);
+    });
+  }
+
   if (adminProductsList) {
     adminProductsList.addEventListener("click", async (event) => {
       const target = event.target;
@@ -1388,22 +1593,24 @@ const setupAdmin = () => {
       if (editButton instanceof HTMLElement && adminProductForm) {
         const productIdField = adminProductForm.querySelector('input[name="productId"]');
         const nameField = adminProductForm.querySelector('input[name="name"]');
-        const categoryField = adminProductForm.querySelector('input[name="category"]');
+        const categoryField = adminProductForm.querySelector('[name="category"]');
         const materialField = adminProductForm.querySelector('input[name="material"]');
         const measureField = adminProductForm.querySelector('input[name="measure"]');
-        const price24Field = adminProductForm.querySelector('input[name="price24"]');
-        const price48Field = adminProductForm.querySelector('input[name="price48"]');
         const imageField = adminProductForm.querySelector('input[name="image"]');
 
         if (productIdField instanceof HTMLInputElement) productIdField.value = editButton.dataset.productId || "";
         if (nameField instanceof HTMLInputElement) nameField.value = editButton.dataset.productName || "";
-        if (categoryField instanceof HTMLInputElement) categoryField.value = editButton.dataset.productCategory || "";
+        if (categoryField instanceof HTMLSelectElement) categoryField.value = editButton.dataset.productCategory || "Tazas";
         if (materialField instanceof HTMLInputElement) materialField.value = editButton.dataset.productMaterial || "";
         if (measureField instanceof HTMLInputElement) measureField.value = editButton.dataset.productMeasure || "";
-        if (price24Field instanceof HTMLInputElement) price24Field.value = editButton.dataset.productPrice24 || "";
-        if (price48Field instanceof HTMLInputElement) price48Field.value = editButton.dataset.productPrice48 || "";
         if (imageField instanceof HTMLInputElement) imageField.value = editButton.dataset.productImageValue || "";
+        try {
+          renderAdminTierRows(JSON.parse(editButton.dataset.productPriceTiers || "[]"));
+        } catch {
+          renderAdminTierRows();
+        }
         if (adminProductCancel) adminProductCancel.hidden = false;
+        setAdminTab("catalog");
         adminProductForm.scrollIntoView({ behavior: "smooth", block: "start" });
         return;
       }
@@ -1464,6 +1671,16 @@ const setupAdmin = () => {
       await renderSiteBanners();
     });
   }
+
+  if (adminTabs.length) {
+    adminTabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        setAdminTab(tab.dataset.adminTab || "overview");
+      });
+    });
+  }
+
+  renderAdminTierRows();
 };
 
 const setupClickableCards = () => {

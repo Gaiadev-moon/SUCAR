@@ -45,6 +45,7 @@ create table if not exists public.admin_products (
   measure text not null,
   price_24 numeric(12,2) not null default 0,
   price_48 numeric(12,2) not null default 0,
+  price_tiers jsonb not null default '[]'::jsonb,
   image_url text,
   created_at timestamptz not null default now()
 );
@@ -60,7 +61,7 @@ create table if not exists public.notifications (
 );
 
 create table if not exists public.site_banners (
-  slot text primary key check (slot in ('primary', 'secondary')),
+  slot text primary key check (slot in ('primary', 'secondary', 'tazas', 'mdf')),
   eyebrow text not null,
   title text not null,
   body text not null,
@@ -69,6 +70,12 @@ create table if not exists public.site_banners (
   image_url text,
   updated_at timestamptz not null default now()
 );
+
+alter table public.admin_products add column if not exists price_tiers jsonb not null default '[]'::jsonb;
+alter table public.site_banners drop constraint if exists site_banners_slot_check;
+alter table public.site_banners
+  add constraint site_banners_slot_check
+  check (slot in ('primary', 'secondary', 'tazas', 'mdf'));
 
 alter table public.profiles enable row level security;
 alter table public.orders enable row level security;
