@@ -458,7 +458,9 @@ main,
 .admin-grid,
 .admin-form,
 .admin-orders-list,
-.admin-products-list {
+.admin-products-list,
+.admin-form-actions,
+.admin-banners-list {
   display: grid;
   gap: 16px;
 }
@@ -486,7 +488,8 @@ main,
 }
 
 .admin-order-card,
-.admin-product-card {
+.admin-product-card,
+.admin-banner-card {
   padding: 14px;
   border-radius: 18px;
   background: rgba(255, 248, 242, 0.92);
@@ -498,7 +501,9 @@ main,
 .admin-order-head,
 .admin-order-foot,
 .admin-product-card,
+.admin-banner-card,
 .admin-product-meta,
+.admin-banner-meta,
 .admin-form-grid {
   display: grid;
   gap: 12px;
@@ -506,7 +511,8 @@ main,
 
 .admin-order-head,
 .admin-order-foot,
-.admin-product-card {
+.admin-product-card,
+.admin-banner-card {
   grid-template-columns: 1fr auto;
   align-items: center;
 }
@@ -534,6 +540,14 @@ main,
 }
 
 .admin-product-meta {
+  justify-items: end;
+}
+
+.admin-form-actions {
+  grid-template-columns: repeat(2, minmax(0, max-content));
+}
+
+.admin-banner-meta {
   justify-items: end;
 }
 

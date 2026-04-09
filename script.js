@@ -2,8 +2,32 @@ const CART_KEY = "arcarsu-cart";
 const ACCOUNT_KEY = "arcarsu-account";
 const ORDER_KEY = "arcarsu-orders";
 const ADMIN_PRODUCTS_KEY = "arcarsu-admin-products";
+const BANNERS_KEY = "arcarsu-site-banners";
 const ADMIN_EMAIL = "admin@arcarsu.com";
 const WHATSAPP_URL = "https://wa.me/5491100000000";
+const supabaseConfig = window.ARCARSU_SUPABASE_CONFIG || {};
+const supabase =
+  supabaseConfig.url && supabaseConfig.anonKey && window.supabase?.createClient
+    ? window.supabase.createClient(supabaseConfig.url, supabaseConfig.anonKey)
+    : null;
+
+const DEFAULT_NOTIFICATIONS = [
+  {
+    title: "Pedido completado",
+    body: "Tu ultimo pedido fue preparado correctamente y esta listo para seguimiento.",
+    kind: "success",
+  },
+  {
+    title: "Sin stock parcial",
+    body: "Uno de los productos pedidos necesita confirmacion antes de avanzar.",
+    kind: "warning",
+  },
+  {
+    title: "Actualizacion de pedido",
+    body: "Hay cambios recientes en tiempos de entrega o preparacion.",
+    kind: "info",
+  },
+];
 
 const menuButton = document.querySelector(".menu-toggle");
 const siteNav = document.querySelector(".site-nav");
@@ -45,6 +69,31 @@ const adminPendingCount = document.querySelector("#admin-pending-count");
 const adminProductsCount = document.querySelector("#admin-products-count");
 const adminProductForm = document.querySelector("#admin-product-form");
 const adminProductsList = document.querySelector("#admin-products-list");
+const adminProductCancel = document.querySelector("#admin-product-cancel");
+const adminBannerForm = document.querySelector("#admin-banner-form");
+const adminBannersList = document.querySelector("#admin-banners-list");
+const homeBannerNodes = document.querySelectorAll("[data-home-banner]");
+
+const DEFAULT_BANNERS = {
+  primary: {
+    slot: "primary",
+    eyebrow: "Promo de temporada",
+    title: "Regalos personalizados para sorprender y vender mejor.",
+    body: "Este bloque puede cambiarse por promociones mensuales, packs o campanas especiales.",
+    buttonLabel: "Consultar promo",
+    link: "https://wa.me/5491100000000",
+    image: "./assets/stock/hands-wrapping.jpg",
+  },
+  secondary: {
+    slot: "secondary",
+    eyebrow: "Arcarsu",
+    title: "Aqui puede ir otra promo o una categoria destacada.",
+    body: "Este bloque puede adaptarse a una novedad, una campana visual o una linea principal del negocio.",
+    buttonLabel: "Ver mas",
+    link: "./contacto.html",
+    image: "",
+  },
+};
 
 const formatCurrency = (value) =>
   new Intl.NumberFormat("es-AR", {
@@ -118,6 +167,30 @@ const writeAdminProducts = (products) => {
   localStorage.setItem(ADMIN_PRODUCTS_KEY, JSON.stringify(products));
 };
 
+const readBanners = () => {
+  try {
+    return JSON.parse(localStorage.getItem(BANNERS_KEY) || "null") || DEFAULT_BANNERS;
+  } catch {
+    return DEFAULT_BANNERS;
+  }
+};
+
+const writeBanners = (banners) => {
+  localStorage.setItem(BANNERS_KEY, JSON.stringify(banners));
+};
+
+const resetAdminProductForm = () => {
+  if (!adminProductForm) return;
+  adminProductForm.reset();
+  const productIdField = adminProductForm.querySelector('input[name="productId"]');
+  if (productIdField instanceof HTMLInputElement) {
+    productIdField.value = "";
+  }
+  if (adminProductCancel) {
+    adminProductCancel.hidden = true;
+  }
+};
+
 const getTierUnits = (tier) => {
   const match = String(tier || "").match(/\d+/);
   return match ? Number(match[0]) : 1;
@@ -153,7 +226,8 @@ const formatAccountName = (email) => {
   return base.replace(/\b\w/g, (char) => char.toUpperCase());
 };
 
-const isAdminAccount = (account) => String(account?.email || "").trim().toLowerCase() === ADMIN_EMAIL;
+const isAdminAccount = (account) =>
+  account?.role === "admin" || String(account?.email || "").trim().toLowerCase() === ADMIN_EMAIL;
 
 const openAccountModal = () => {
   if (!accountModal || !accountOverlay) return;
@@ -194,6 +268,176 @@ const closeNotificationsPanel = () => {
   notificationsToggle.setAttribute("aria-expanded", "false");
 };
 
+const renderNotifications = async () => {
+  if (!notificationsPanel || !notificationsCount) return;
+
+  let notifications = DEFAULT_NOTIFICATIONS;
+  const account = readAccount();
+
+  if (supabase && account?.id) {
+    const { data } = await supabase
+      .from("notifications")
+      .select("id, title, body, kind, read, created_at")
+      .order("created_at", { ascending: false })
+      .limit(6);
+
+    if (data?.length) {
+      notifications = data;
+    }
+  }
+
+  notificationsCount.textContent = String(notifications.length);
+  notificationsPanel.innerHTML = `
+    <span class="account-panel-label">Notificaciones</span>
+    <div class="notifications-list">
+      ${notifications
+        .map(
+          (item) => `
+            <article class="notification-item notification-${escapeHtml(item.kind || "info")}">
+              <strong>${escapeHtml(item.title)}</strong>
+              <p>${escapeHtml(item.body)}</p>
+            </article>
+          `
+        )
+        .join("")}
+    </div>
+  `;
+};
+
+const applyBannerData = (slot, data) => {
+  const banner = document.querySelector(`[data-home-banner="${slot}"]`);
+  if (!banner || !data) return;
+
+  const eyebrow = banner.querySelector("[data-banner-eyebrow]");
+  const title = banner.querySelector("[data-banner-title]");
+  const body = banner.querySelector("[data-banner-body]");
+  const button = banner.querySelector("[data-banner-button]");
+  const image = banner.querySelector("[data-banner-image]");
+
+  if (eyebrow) eyebrow.textContent = data.eyebrow || "";
+  if (title) title.textContent = data.title || "";
+  if (body) body.textContent = data.body || "";
+  if (button) {
+    button.textContent = data.buttonLabel || "Ver mas";
+    button.href = data.link || "#";
+  }
+  if (image && data.image) {
+    image.src = data.image;
+    image.hidden = false;
+  }
+};
+
+const renderSiteBanners = async () => {
+  if (!homeBannerNodes.length && !adminBannersList) return;
+
+  let banners = readBanners();
+
+  if (supabase) {
+    const { data } = await supabase
+      .from("site_banners")
+      .select("slot, eyebrow, title, body, button_label, link, image_url")
+      .order("slot", { ascending: true });
+
+    if (data?.length) {
+      banners = data.reduce((acc, item) => {
+        acc[item.slot] = {
+          slot: item.slot,
+          eyebrow: item.eyebrow,
+          title: item.title,
+          body: item.body,
+          buttonLabel: item.button_label,
+          link: item.link,
+          image: item.image_url,
+        };
+        return acc;
+      }, {});
+    }
+  }
+
+  const mergedBanners = {
+    primary: { ...DEFAULT_BANNERS.primary, ...(banners.primary || {}) },
+    secondary: { ...DEFAULT_BANNERS.secondary, ...(banners.secondary || {}) },
+  };
+
+  applyBannerData("primary", mergedBanners.primary);
+  applyBannerData("secondary", mergedBanners.secondary);
+
+  if (adminBannersList) {
+    adminBannersList.innerHTML = Object.values(mergedBanners)
+      .map(
+        (banner) => `
+          <article class="admin-banner-card">
+            <div>
+              <strong>${escapeHtml(banner.slot === "primary" ? "Banner principal" : "Banner secundario")}</strong>
+              <p>${escapeHtml(banner.title)}</p>
+            </div>
+            <div class="admin-banner-meta">
+              <span>${escapeHtml(banner.buttonLabel)}</span>
+              <button class="admin-delete" type="button" data-banner-reset="${escapeHtml(banner.slot)}">Restaurar</button>
+            </div>
+          </article>
+        `
+      )
+      .join("");
+  }
+
+  return mergedBanners;
+};
+
+const upsertBanner = async (banner) => {
+  if (supabase) {
+    await supabase.from("site_banners").upsert({
+      slot: banner.slot,
+      eyebrow: banner.eyebrow,
+      title: banner.title,
+      body: banner.body,
+      button_label: banner.buttonLabel,
+      link: banner.link,
+      image_url: banner.image,
+    });
+    return;
+  }
+
+  const banners = readBanners();
+  banners[banner.slot] = banner;
+  writeBanners(banners);
+};
+
+const syncAccountFromSupabase = async () => {
+  if (!supabase) return readAccount();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    writeAccount(null);
+    renderAccountState();
+    await renderNotifications();
+    renderAdminPage();
+    return null;
+  }
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("full_name, role, email")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  const account = {
+    id: user.id,
+    email: profile?.email || user.email || "",
+    name: profile?.full_name || formatAccountName(user.email),
+    role: profile?.role || "customer",
+  };
+
+  writeAccount(account);
+  renderAccountState();
+  await renderNotifications();
+  renderAdminPage();
+  return account;
+};
+
 const renderAccountState = () => {
   const account = readAccount();
 
@@ -207,10 +451,6 @@ const renderAccountState = () => {
 
   if (accountName) {
     accountName.textContent = account?.name || "Cliente Arcarsu";
-  }
-
-  if (notificationsCount) {
-    notificationsCount.textContent = "3";
   }
 
   if (adminLink) {
@@ -266,9 +506,47 @@ const buildWhatsAppMessage = (cart, customer = null) => {
   return `${WHATSAPP_URL}?text=${encodeURIComponent(sections.join("\n\n"))}`;
 };
 
-const createOrderRecord = (cart, customer) => {
-  const orders = readOrders();
+const createOrderRecord = async (cart, customer) => {
+  const account = readAccount();
   const { totalPrice } = getCartTotals(cart);
+
+  if (supabase) {
+    const orderPayload = {
+      user_id: account?.id || null,
+      customer_name: customer.name,
+      customer_email: customer.email,
+      customer_phone: customer.phone,
+      delivery: customer.delivery,
+      address: customer.address,
+      city: customer.city,
+      notes: customer.notes,
+      total: totalPrice,
+    };
+
+    const { data: order, error } = await supabase
+      .from("orders")
+      .insert(orderPayload)
+      .select("id")
+      .single();
+
+    if (!error && order?.id) {
+      const itemsPayload = cart.map((item) => ({
+        order_id: order.id,
+        product_name: item.name,
+        tier: item.tier,
+        unit_price: item.price,
+        package_units: getTierUnits(item.tier),
+        package_quantity: item.quantity,
+        subtotal: getItemSubtotal(item),
+        image_url: item.image,
+      }));
+
+      await supabase.from("order_items").insert(itemsPayload);
+      return order;
+    }
+  }
+
+  const orders = readOrders();
   const order = {
     id: `ARC-${Date.now()}`,
     createdAt: new Date().toISOString(),
@@ -384,10 +662,46 @@ const updateCheckoutView = () => {
   checkoutTotal.textContent = formatCurrency(totalPrice);
 };
 
-const renderAdminOrders = () => {
+const renderAdminOrders = async () => {
   if (!adminOrders || !adminOrdersCount || !adminPendingCount) return;
 
-  const orders = readOrders();
+  let orders = readOrders();
+
+  if (supabase) {
+    const { data } = await supabase
+      .from("orders")
+      .select(
+        "id, created_at, status, total, customer_name, customer_email, customer_phone, delivery, address, city, notes, order_items(product_name, tier, package_quantity, unit_price, subtotal, image_url)"
+      )
+      .order("created_at", { ascending: false });
+
+    if (data) {
+      orders = data.map((order) => ({
+        id: order.id,
+        createdAt: order.created_at,
+        status: order.status,
+        total: Number(order.total || 0),
+        customer: {
+          name: order.customer_name,
+          email: order.customer_email,
+          phone: order.customer_phone,
+          delivery: order.delivery,
+          address: order.address,
+          city: order.city,
+          notes: order.notes,
+        },
+        items: (order.order_items || []).map((item) => ({
+          name: item.product_name,
+          tier: item.tier,
+          quantity: item.package_quantity,
+          price: Number(item.unit_price || 0),
+          subtotal: Number(item.subtotal || 0),
+          image: item.image_url || "",
+        })),
+      }));
+    }
+  }
+
   const pending = orders.filter((order) => order.status !== "Completado").length;
 
   adminOrdersCount.textContent = String(orders.length);
@@ -412,7 +726,7 @@ const renderAdminOrders = () => {
               <p>${escapeHtml(order.customer.name)} - ${escapeHtml(order.customer.city)}</p>
             </div>
             <div class="admin-order-actions">
-              <select data-order-status="${index}" aria-label="Estado del pedido">
+              <select data-order-status="${index}" data-order-id="${escapeHtml(order.id)}" aria-label="Estado del pedido">
                 <option value="Pendiente" ${order.status === "Pendiente" ? "selected" : ""}>Pendiente</option>
                 <option value="En preparacion" ${order.status === "En preparacion" ? "selected" : ""}>En preparacion</option>
                 <option value="Completado" ${order.status === "Completado" ? "selected" : ""}>Completado</option>
@@ -432,10 +746,31 @@ const renderAdminOrders = () => {
     .join("");
 };
 
-const renderAdminProducts = () => {
+const renderAdminProducts = async () => {
   if (!adminProductsList || !adminProductsCount) return;
 
-  const products = readAdminProducts();
+  let products = readAdminProducts();
+
+  if (supabase) {
+    const { data } = await supabase
+      .from("admin_products")
+      .select("id, name, category, material, measure, price_24, price_48, image_url")
+      .order("created_at", { ascending: false });
+
+    if (data) {
+      products = data.map((product) => ({
+        id: product.id,
+        name: product.name,
+        category: product.category,
+        material: product.material,
+        measure: product.measure,
+        price24: Number(product.price_24 || 0),
+        price48: Number(product.price_48 || 0),
+        image: product.image_url || "",
+      }));
+    }
+  }
+
   adminProductsCount.textContent = String(products.length);
 
   if (!products.length) {
@@ -454,7 +789,8 @@ const renderAdminProducts = () => {
           <div class="admin-product-meta">
             <span>x24 ${formatCurrency(product.price24)}</span>
             <span>x48 ${formatCurrency(product.price48)}</span>
-            <button class="admin-delete" type="button" data-product-delete="${index}">Quitar</button>
+            <button class="button button-light admin-edit" type="button" data-product-edit="${index}" data-product-id="${escapeHtml(product.id || "")}" data-product-name="${escapeHtml(product.name)}" data-product-category="${escapeHtml(product.category)}" data-product-material="${escapeHtml(product.material)}" data-product-measure="${escapeHtml(product.measure)}" data-product-price24="${escapeHtml(product.price24)}" data-product-price48="${escapeHtml(product.price48)}" data-product-image-value="${escapeHtml(product.image || "")}">Editar</button>
+            <button class="admin-delete" type="button" data-product-delete="${index}" data-product-id="${escapeHtml(product.id || "")}">Quitar</button>
           </div>
         </article>
       `
@@ -462,7 +798,7 @@ const renderAdminProducts = () => {
     .join("");
 };
 
-const renderAdminPage = () => {
+const renderAdminPage = async () => {
   if (!adminGate || !adminContent) return;
 
   const account = readAccount();
@@ -473,8 +809,9 @@ const renderAdminPage = () => {
 
   if (!isAdmin) return;
 
-  renderAdminOrders();
-  renderAdminProducts();
+  await renderSiteBanners();
+  await renderAdminOrders();
+  await renderAdminProducts();
 };
 
 const addCartItem = (button) => {
@@ -540,6 +877,13 @@ const setupContactForm = () => {
 
 const setupAccount = () => {
   renderAccountState();
+  renderNotifications();
+  if (supabase) {
+    syncAccountFromSupabase();
+    supabase.auth.onAuthStateChange(() => {
+      syncAccountFromSupabase();
+    });
+  }
 
   if (notificationsToggle) {
     notificationsToggle.addEventListener("click", () => {
@@ -583,7 +927,7 @@ const setupAccount = () => {
   }
 
   if (accountForm) {
-    accountForm.addEventListener("submit", (event) => {
+    accountForm.addEventListener("submit", async (event) => {
       event.preventDefault();
 
       const data = new FormData(accountForm);
@@ -591,25 +935,47 @@ const setupAccount = () => {
       const password = String(data.get("password") || "").trim();
       if (!email || !password) return;
 
-      writeAccount({
-        email,
-        name: formatAccountName(email),
-      });
+      if (supabase) {
+        const { error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+
+        if (error) {
+          if (formNote) {
+            formNote.textContent = "No se pudo iniciar sesion con Supabase.";
+          }
+          return;
+        }
+
+        await syncAccountFromSupabase();
+      } else {
+        writeAccount({
+          email,
+          name: formatAccountName(email),
+          role: email.toLowerCase() === ADMIN_EMAIL ? "admin" : "customer",
+        });
+      }
 
       accountForm.reset();
       closeAccountModal();
       renderAccountState();
-      renderAdminPage();
+      await renderNotifications();
+      await renderAdminPage();
       openAccountPanel();
     });
   }
 
   if (accountLogout) {
-    accountLogout.addEventListener("click", () => {
+    accountLogout.addEventListener("click", async () => {
+      if (supabase) {
+        await supabase.auth.signOut();
+      }
       writeAccount(null);
       closeAccountPanel();
       renderAccountState();
-      renderAdminPage();
+      await renderNotifications();
+      await renderAdminPage();
     });
   }
 
@@ -759,7 +1125,7 @@ const setupLightbox = () => {
 const setupCheckoutForm = () => {
   if (!checkoutForm) return;
 
-  checkoutForm.addEventListener("submit", (event) => {
+  checkoutForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     const cart = readCart();
@@ -776,7 +1142,7 @@ const setupCheckoutForm = () => {
       notes: String(data.get("notes") || "").trim(),
     };
 
-    createOrderRecord(cart, customer);
+    await createOrderRecord(cart, customer);
     window.location.href = buildWhatsAppMessage(cart, customer);
   });
 };
@@ -787,31 +1153,39 @@ const setupAdmin = () => {
   renderAdminPage();
 
   if (adminOrders) {
-    adminOrders.addEventListener("change", (event) => {
+    adminOrders.addEventListener("change", async (event) => {
       const target = event.target;
       if (!(target instanceof HTMLSelectElement)) return;
 
       const index = Number(target.dataset.orderStatus);
       if (Number.isNaN(index)) return;
 
-      const orders = readOrders();
-      const order = orders[index];
-      if (!order) return;
+      if (supabase) {
+        const orderId = target.dataset.orderId;
+        if (!orderId) return;
 
-      order.status = target.value;
-      writeOrders(orders);
-      renderAdminPage();
+        await supabase.from("orders").update({ status: target.value }).eq("id", orderId);
+      } else {
+        const orders = readOrders();
+        const order = orders[index];
+        if (!order) return;
+
+        order.status = target.value;
+        writeOrders(orders);
+      }
+
+      await renderAdminPage();
     });
   }
 
   if (adminProductForm) {
-    adminProductForm.addEventListener("submit", (event) => {
+    adminProductForm.addEventListener("submit", async (event) => {
       event.preventDefault();
 
       const data = new FormData(adminProductForm);
-      const products = readAdminProducts();
-
-      products.unshift({
+      const productId = String(data.get("productId") || "").trim();
+      const product = {
+        id: productId,
         name: String(data.get("name") || "").trim(),
         category: String(data.get("category") || "").trim(),
         material: String(data.get("material") || "").trim(),
@@ -819,29 +1193,133 @@ const setupAdmin = () => {
         price24: Number(data.get("price24") || 0),
         price48: Number(data.get("price48") || 0),
         image: String(data.get("image") || "").trim(),
-      });
+      };
 
-      writeAdminProducts(products);
-      adminProductForm.reset();
-      renderAdminProducts();
+      if (supabase) {
+        const account = readAccount();
+        const payload = {
+          created_by: account?.id || null,
+          name: product.name,
+          category: product.category,
+          material: product.material,
+          measure: product.measure,
+          price_24: product.price24,
+          price_48: product.price48,
+          image_url: product.image,
+        };
+
+        if (productId) {
+          await supabase.from("admin_products").update(payload).eq("id", productId);
+        } else {
+          await supabase.from("admin_products").insert(payload);
+        }
+      } else {
+        const products = readAdminProducts();
+        if (productId) {
+          const currentIndex = products.findIndex((item) => String(item.id || "") === productId);
+          if (currentIndex >= 0) {
+            products[currentIndex] = { ...products[currentIndex], ...product };
+          }
+        } else {
+          products.unshift({ ...product, id: `local-${Date.now()}` });
+        }
+        writeAdminProducts(products);
+      }
+
+      resetAdminProductForm();
+      await renderAdminProducts();
+    });
+  }
+
+  if (adminProductCancel) {
+    adminProductCancel.addEventListener("click", () => {
+      resetAdminProductForm();
     });
   }
 
   if (adminProductsList) {
-    adminProductsList.addEventListener("click", (event) => {
+    adminProductsList.addEventListener("click", async (event) => {
       const target = event.target;
       if (!(target instanceof HTMLElement)) return;
+
+      const editButton = target.closest("[data-product-edit]");
+      if (editButton instanceof HTMLElement && adminProductForm) {
+        const productIdField = adminProductForm.querySelector('input[name="productId"]');
+        const nameField = adminProductForm.querySelector('input[name="name"]');
+        const categoryField = adminProductForm.querySelector('input[name="category"]');
+        const materialField = adminProductForm.querySelector('input[name="material"]');
+        const measureField = adminProductForm.querySelector('input[name="measure"]');
+        const price24Field = adminProductForm.querySelector('input[name="price24"]');
+        const price48Field = adminProductForm.querySelector('input[name="price48"]');
+        const imageField = adminProductForm.querySelector('input[name="image"]');
+
+        if (productIdField instanceof HTMLInputElement) productIdField.value = editButton.dataset.productId || "";
+        if (nameField instanceof HTMLInputElement) nameField.value = editButton.dataset.productName || "";
+        if (categoryField instanceof HTMLInputElement) categoryField.value = editButton.dataset.productCategory || "";
+        if (materialField instanceof HTMLInputElement) materialField.value = editButton.dataset.productMaterial || "";
+        if (measureField instanceof HTMLInputElement) measureField.value = editButton.dataset.productMeasure || "";
+        if (price24Field instanceof HTMLInputElement) price24Field.value = editButton.dataset.productPrice24 || "";
+        if (price48Field instanceof HTMLInputElement) price48Field.value = editButton.dataset.productPrice48 || "";
+        if (imageField instanceof HTMLInputElement) imageField.value = editButton.dataset.productImageValue || "";
+        if (adminProductCancel) adminProductCancel.hidden = false;
+        adminProductForm.scrollIntoView({ behavior: "smooth", block: "start" });
+        return;
+      }
 
       const button = target.closest("[data-product-delete]");
       if (!(button instanceof HTMLElement)) return;
 
-      const index = Number(button.dataset.productDelete);
-      if (Number.isNaN(index)) return;
+      if (supabase) {
+        const productId = button.dataset.productId;
+        if (!productId) return;
+        await supabase.from("admin_products").delete().eq("id", productId);
+      } else {
+        const index = Number(button.dataset.productDelete);
+        if (Number.isNaN(index)) return;
 
-      const products = readAdminProducts();
-      products.splice(index, 1);
-      writeAdminProducts(products);
-      renderAdminProducts();
+        const products = readAdminProducts();
+        products.splice(index, 1);
+        writeAdminProducts(products);
+      }
+
+      await renderAdminProducts();
+    });
+  }
+
+  if (adminBannerForm) {
+    adminBannerForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const data = new FormData(adminBannerForm);
+      const banner = {
+        slot: String(data.get("slot") || "primary"),
+        eyebrow: String(data.get("eyebrow") || "").trim(),
+        title: String(data.get("title") || "").trim(),
+        body: String(data.get("body") || "").trim(),
+        buttonLabel: String(data.get("buttonLabel") || "").trim(),
+        link: String(data.get("link") || "").trim(),
+        image: String(data.get("image") || "").trim(),
+      };
+
+      await upsertBanner(banner);
+      adminBannerForm.reset();
+      await renderSiteBanners();
+    });
+  }
+
+  if (adminBannersList) {
+    adminBannersList.addEventListener("click", async (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLElement)) return;
+
+      const button = target.closest("[data-banner-reset]");
+      if (!(button instanceof HTMLElement)) return;
+
+      const slot = button.dataset.bannerReset;
+      if (!slot || !(slot in DEFAULT_BANNERS)) return;
+
+      await upsertBanner(DEFAULT_BANNERS[slot]);
+      await renderSiteBanners();
     });
   }
 };
@@ -874,6 +1352,7 @@ setupLightbox();
 setupCheckoutForm();
 setupAdmin();
 setupClickableCards();
+renderSiteBanners();
 updateCartView();
 updateCheckoutView();
 

@@ -132,6 +132,7 @@
                   <h3>Agregar o quitar articulos</h3>
                 </div>
                 <form class="admin-form" id="admin-product-form">
+                  <input type="hidden" name="productId" />
                   <div class="field">
                     <label for="admin-product-name">Nombre</label>
                     <input id="admin-product-name" name="name" type="text" placeholder="Nombre del articulo" required />
@@ -162,9 +163,56 @@
                     <label for="admin-product-image">Imagen</label>
                     <input id="admin-product-image" name="image" type="text" placeholder="./assets/..." />
                   </div>
-                  <button class="button button-dark" type="submit">Agregar articulo</button>
+                  <div class="admin-form-actions">
+                    <button class="button button-dark" type="submit">Guardar articulo</button>
+                    <button class="button button-light" type="button" id="admin-product-cancel" hidden>Cancelar edicion</button>
+                  </div>
                 </form>
                 <div class="admin-products-list" id="admin-products-list"></div>
+              </article>
+
+              <article class="admin-card">
+                <div class="admin-card-head">
+                  <span class="eyebrow">Promociones</span>
+                  <h3>Cambiar banners promocionales</h3>
+                </div>
+                <form class="admin-form" id="admin-banner-form">
+                  <div class="field">
+                    <label for="admin-banner-slot">Banner</label>
+                    <select id="admin-banner-slot" name="slot" required>
+                      <option value="primary">Banner principal</option>
+                      <option value="secondary">Banner secundario</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="admin-banner-eyebrow">Etiqueta</label>
+                    <input id="admin-banner-eyebrow" name="eyebrow" type="text" placeholder="Promo de temporada" required />
+                  </div>
+                  <div class="field">
+                    <label for="admin-banner-title">Titulo</label>
+                    <input id="admin-banner-title" name="title" type="text" placeholder="Titulo del banner" required />
+                  </div>
+                  <div class="field">
+                    <label for="admin-banner-body">Descripcion</label>
+                    <textarea id="admin-banner-body" name="body" placeholder="Texto corto para la promo" required></textarea>
+                  </div>
+                  <div class="admin-form-grid">
+                    <div class="field">
+                      <label for="admin-banner-button">Boton</label>
+                      <input id="admin-banner-button" name="buttonLabel" type="text" placeholder="Consultar promo" required />
+                    </div>
+                    <div class="field">
+                      <label for="admin-banner-link">Link</label>
+                      <input id="admin-banner-link" name="link" type="text" placeholder="https:// o ./contacto.html" required />
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label for="admin-banner-image">Imagen</label>
+                    <input id="admin-banner-image" name="image" type="text" placeholder="./assets/stock/..." />
+                  </div>
+                  <button class="button button-dark" type="submit">Guardar banner</button>
+                </form>
+                <div class="admin-banners-list" id="admin-banners-list"></div>
               </article>
             </section>
           </div>
@@ -216,6 +264,8 @@
         </div>
       </div>
 
+      <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+      <script src="./supabase-config.js"></script>
       <script src="./script.js"></script>
     </div>
   </body>

@@ -171,22 +171,22 @@
 
         <section>
           <div class="promo-grid">
-            <article class="promo-banner promo-banner-large">
-              <img src="./assets/stock/hands-wrapping.jpg" alt="Banner promocional de regalos personalizados" />
+            <article class="promo-banner promo-banner-large" data-home-banner="primary">
+              <img data-banner-image src="./assets/stock/hands-wrapping.jpg" alt="Banner promocional de regalos personalizados" />
               <div class="promo-content">
-                <span class="eyebrow">Promo de temporada</span>
-                <h3>Regalos personalizados para sorprender y vender mejor.</h3>
-                <p>Este bloque puede cambiarse por promociones mensuales, packs o campañas especiales.</p>
-                <a class="button button-dark" href="https://wa.me/5491100000000" target="_blank" rel="noreferrer">Consultar promo</a>
+                <span class="eyebrow" data-banner-eyebrow>Promo de temporada</span>
+                <h3 data-banner-title>Regalos personalizados para sorprender y vender mejor.</h3>
+                <p data-banner-body>Este bloque puede cambiarse por promociones mensuales, packs o campañas especiales.</p>
+                <a class="button button-dark" data-banner-button href="https://wa.me/5491100000000" target="_blank" rel="noreferrer">Consultar promo</a>
               </div>
             </article>
 
-            <article class="promo-banner promo-banner-accent">
+            <article class="promo-banner promo-banner-accent" data-home-banner="secondary">
               <div class="promo-content">
-                <span class="eyebrow">Arcarsu</span>
-                <h3>Aqui puede ir otra promo o una categoria destacada.</h3>
-                <p>Este bloque puede adaptarse a una novedad, una campaña visual o una linea principal del negocio.</p>
-                <a class="button button-light" href="./contacto.html">Ver mas</a>
+                <span class="eyebrow" data-banner-eyebrow>Arcarsu</span>
+                <h3 data-banner-title>Aqui puede ir otra promo o una categoria destacada.</h3>
+                <p data-banner-body>Este bloque puede adaptarse a una novedad, una campaña visual o una linea principal del negocio.</p>
+                <a class="button button-light" data-banner-button href="./contacto.html">Ver mas</a>
               </div>
             </article>
           </div>
@@ -418,6 +418,8 @@
       </aside>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="./supabase-config.js"></script>
     <script src="./script.js"></script>
   </body>
 </html>
