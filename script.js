@@ -274,17 +274,19 @@ const renderNotifications = async () => {
   let notifications = DEFAULT_NOTIFICATIONS;
   const account = readAccount();
 
-  if (supabase && account?.id) {
-    const { data } = await supabase
-      .from("notifications")
-      .select("id, title, body, kind, read, created_at")
-      .order("created_at", { ascending: false })
-      .limit(6);
+  try {
+    if (supabase && account?.id) {
+      const { data } = await supabase
+        .from("notifications")
+        .select("id, title, body, kind, read, created_at")
+        .order("created_at", { ascending: false })
+        .limit(6);
 
-    if (data?.length) {
-      notifications = data;
+      if (data?.length) {
+        notifications = data;
+      }
     }
-  }
+  } catch {}
 
   notificationsCount.textContent = String(notifications.length);
   notificationsPanel.innerHTML = `
@@ -332,27 +334,29 @@ const renderSiteBanners = async () => {
 
   let banners = readBanners();
 
-  if (supabase) {
-    const { data } = await supabase
-      .from("site_banners")
-      .select("slot, eyebrow, title, body, button_label, link, image_url")
-      .order("slot", { ascending: true });
+  try {
+    if (supabase) {
+      const { data } = await supabase
+        .from("site_banners")
+        .select("slot, eyebrow, title, body, button_label, link, image_url")
+        .order("slot", { ascending: true });
 
-    if (data?.length) {
-      banners = data.reduce((acc, item) => {
-        acc[item.slot] = {
-          slot: item.slot,
-          eyebrow: item.eyebrow,
-          title: item.title,
-          body: item.body,
-          buttonLabel: item.button_label,
-          link: item.link,
-          image: item.image_url,
-        };
-        return acc;
-      }, {});
+      if (data?.length) {
+        banners = data.reduce((acc, item) => {
+          acc[item.slot] = {
+            slot: item.slot,
+            eyebrow: item.eyebrow,
+            title: item.title,
+            body: item.body,
+            buttonLabel: item.button_label,
+            link: item.link,
+            image: item.image_url,
+          };
+          return acc;
+        }, {});
+      }
     }
-  }
+  } catch {}
 
   const mergedBanners = {
     primary: { ...DEFAULT_BANNERS.primary, ...(banners.primary || {}) },
@@ -406,36 +410,40 @@ const upsertBanner = async (banner) => {
 const syncAccountFromSupabase = async () => {
   if (!supabase) return readAccount();
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  try {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-  if (!user) {
-    writeAccount(null);
+    if (!user) {
+      writeAccount(null);
+      renderAccountState();
+      await renderNotifications();
+      renderAdminPage();
+      return null;
+    }
+
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("full_name, role, email")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    const account = {
+      id: user.id,
+      email: profile?.email || user.email || "",
+      name: profile?.full_name || formatAccountName(user.email),
+      role: profile?.role || "customer",
+    };
+
+    writeAccount(account);
     renderAccountState();
     await renderNotifications();
     renderAdminPage();
-    return null;
+    return account;
+  } catch {
+    return readAccount();
   }
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("full_name, role, email")
-    .eq("id", user.id)
-    .maybeSingle();
-
-  const account = {
-    id: user.id,
-    email: profile?.email || user.email || "",
-    name: profile?.full_name || formatAccountName(user.email),
-    role: profile?.role || "customer",
-  };
-
-  writeAccount(account);
-  renderAccountState();
-  await renderNotifications();
-  renderAdminPage();
-  return account;
 };
 
 const renderAccountState = () => {
@@ -981,8 +989,9 @@ const setupAccount = () => {
 
   document.addEventListener("click", (event) => {
     const target = event.target;
-    if (!(target instanceof HTMLElement)) return;
-    if (target.closest(".account-area")) return;
+    const element = target instanceof Element ? target : null;
+    if (element?.closest(".account-area")) return;
+    if (element?.closest(".cart-launch")) return;
     closeAccountPanel();
     closeNotificationsPanel();
   });
@@ -992,6 +1001,50 @@ const setupAccount = () => {
     closeAccountModal();
     closeAccountPanel();
     closeNotificationsPanel();
+  });
+};
+
+const setupGlobalControlFallbacks = () => {
+  document.addEventListener("click", (event) => {
+    const target = event.target;
+    const element = target instanceof Element ? target : null;
+    if (!element) return;
+
+    const cartButton = element.closest(".cart-launch");
+    if (cartButton instanceof HTMLElement) {
+      event.preventDefault();
+      openCart();
+      return;
+    }
+
+    const notificationsButton = element.closest(".notifications-toggle");
+    if (notificationsButton instanceof HTMLElement) {
+      event.preventDefault();
+      closeAccountPanel();
+      if (notificationsPanel?.hidden === false) {
+        closeNotificationsPanel();
+      } else {
+        openNotificationsPanel();
+      }
+      return;
+    }
+
+    const accountButton = element.closest(".account-toggle");
+    if (accountButton instanceof HTMLElement) {
+      event.preventDefault();
+      const account = readAccount();
+      closeNotificationsPanel();
+      if (!account) {
+        openAccountModal();
+        return;
+      }
+
+      if (accountPanel?.hidden === false) {
+        closeAccountPanel();
+      } else {
+        openAccountPanel();
+      }
+    }
   });
 };
 
@@ -1346,6 +1399,7 @@ const setupClickableCards = () => {
 setupMenu();
 setupContactForm();
 setupAccount();
+setupGlobalControlFallbacks();
 setupCartInteractions();
 setupFilters();
 setupLightbox();

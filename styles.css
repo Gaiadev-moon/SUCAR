@@ -104,6 +104,8 @@ main,
   align-items: center;
   gap: 12px;
   margin-left: auto;
+  position: relative;
+  z-index: 32;
 }
 
 .account-area {
@@ -111,6 +113,7 @@ main,
   display: flex;
   align-items: center;
   gap: 10px;
+  z-index: 33;
 }
 
 .notifications-area {
@@ -132,6 +135,7 @@ main,
   justify-content: center;
   cursor: pointer;
   box-shadow: 0 12px 26px rgba(103, 62, 24, 0.08);
+  pointer-events: auto;
 }
 
 .notifications-toggle:hover,
@@ -245,6 +249,7 @@ main,
   gap: 10px;
   cursor: pointer;
   box-shadow: 0 12px 26px rgba(103, 62, 24, 0.08);
+  pointer-events: auto;
 }
 
 .account-toggle-icon {
@@ -578,6 +583,12 @@ main,
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.site-nav-top a {
+  pointer-events: auto;
 }
 
 .site-nav a {
@@ -1807,6 +1818,7 @@ main section {
   inset: -6px;
   border-radius: 24px;
   border: 1px solid rgba(234, 123, 44, 0.12);
+  pointer-events: none;
 }
 
 .cart-icon {
