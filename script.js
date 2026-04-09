@@ -53,11 +53,21 @@ const accountOverlay = document.querySelector("#account-overlay");
 const accountModal = document.querySelector("#account-modal");
 const accountModalClose = document.querySelector(".account-modal-close");
 const accountForm = document.querySelector("#account-form");
+const accountNameInput = document.querySelector("#account-name");
 const accountEmailInput = document.querySelector("#account-email");
 const accountPasswordInput = document.querySelector("#account-password");
+const accountConfirmInput = document.querySelector("#account-confirm-password");
+const accountNameField = document.querySelector("#account-name-field");
+const accountConfirmField = document.querySelector("#account-confirm-field");
+const accountModalTitle = document.querySelector("#account-modal-title");
+const accountModalCopy = document.querySelector("#account-modal-copy");
+const accountSubmit = document.querySelector("#account-submit");
+const accountMetaText = document.querySelector("#account-meta-text");
 const accountAuthNote = document.querySelector("#account-auth-note");
 const accountForgot = document.querySelector("#account-forgot");
 const accountRegister = document.querySelector("#account-register");
+const accountGoogle = document.querySelector("#account-google");
+const accountModeButtons = document.querySelectorAll("[data-account-mode]");
 const accountLogout = document.querySelector(".account-logout");
 const accountTriggerText = document.querySelector("[data-account-trigger-text]");
 const accountUser = document.querySelector("[data-account-user]");
@@ -82,6 +92,7 @@ const adminBannersList = document.querySelector("#admin-banners-list");
 const adminTabs = document.querySelectorAll("[data-admin-tab]");
 const adminPanels = document.querySelectorAll("[data-admin-section]");
 const homeBannerNodes = document.querySelectorAll("[data-home-banner]");
+let accountMode = "login";
 
 const BANNER_LABELS = {
   primary: "Inicio principal",
@@ -335,6 +346,7 @@ const isAdminAccount = (account) =>
 const openAccountModal = () => {
   if (!accountModal || !accountOverlay) return;
   setAccountAuthNote("");
+  setAccountMode(accountMode);
   accountModal.hidden = false;
   accountOverlay.hidden = false;
   accountModal.setAttribute("aria-hidden", "false");
@@ -347,6 +359,45 @@ const closeAccountModal = () => {
   accountModal.hidden = true;
   accountOverlay.hidden = true;
   accountModal.setAttribute("aria-hidden", "true");
+};
+
+const setAccountMode = (mode = "login") => {
+  accountMode = mode === "register" ? "register" : "login";
+  const isRegister = accountMode === "register";
+
+  accountModeButtons.forEach((button) => {
+    const active = button.getAttribute("data-account-mode") === accountMode;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-selected", String(active));
+  });
+
+  if (accountNameField) accountNameField.hidden = !isRegister;
+  if (accountConfirmField) accountConfirmField.hidden = !isRegister;
+  if (accountNameInput) accountNameInput.required = isRegister;
+  if (accountConfirmInput) accountConfirmInput.required = isRegister;
+  if (accountPasswordInput) {
+    accountPasswordInput.setAttribute("autocomplete", isRegister ? "new-password" : "current-password");
+  }
+  if (accountModalTitle) {
+    accountModalTitle.textContent = isRegister ? "Crear cuenta" : "Iniciar sesion";
+  }
+  if (accountModalCopy) {
+    accountModalCopy.textContent = isRegister
+      ? "Crea tu cuenta para seguir pedidos, guardar tus datos y comprar mas rapido."
+      : "Accede a tu cuenta para ver tus datos, pedidos pendientes y estado del pedido actual.";
+  }
+  if (accountSubmit) {
+    accountSubmit.textContent = isRegister ? "Crear cuenta" : "Ingresar";
+  }
+  if (accountForgot) {
+    accountForgot.hidden = isRegister;
+  }
+  if (accountMetaText) {
+    accountMetaText.textContent = isRegister ? "Ya tienes cuenta?" : "No tienes usuario?";
+  }
+  if (accountRegister) {
+    accountRegister.textContent = isRegister ? "Inicia sesion" : "Registrate";
+  }
 };
 
 const setAccountAuthNote = (message, tone = "info") => {
@@ -1116,11 +1167,58 @@ const setupAccount = () => {
       setAccountAuthNote("");
 
       const data = new FormData(accountForm);
+      const fullName = String(data.get("fullName") || "").trim();
       const email = String(data.get("email") || "").trim();
       const password = String(data.get("password") || "").trim();
+      const confirmPassword = String(data.get("confirmPassword") || "").trim();
+      const isRegister = accountMode === "register";
       if (!email || !password) return;
 
+      if (isRegister) {
+        if (!fullName) {
+          setAccountAuthNote("Ingresa un nombre de usuario para crear la cuenta.", "warning");
+          accountNameInput?.focus();
+          return;
+        }
+
+        if (password.length < 6) {
+          setAccountAuthNote("La contrasena debe tener al menos 6 caracteres.", "warning");
+          accountPasswordInput?.focus();
+          return;
+        }
+
+        if (password !== confirmPassword) {
+          setAccountAuthNote("La confirmacion de contrasena no coincide.", "error");
+          accountConfirmInput?.focus();
+          return;
+        }
+      }
+
       if (supabaseClient) {
+        if (isRegister) {
+          const { error } = await supabaseClient.auth.signUp({
+            email,
+            password,
+            options: {
+              data: {
+                full_name: fullName,
+              },
+              emailRedirectTo: `${window.location.origin}/`,
+            },
+          });
+
+          if (error) {
+            setAccountAuthNote("No pudimos crear la cuenta con esos datos. Prueba con otro correo.", "error");
+            return;
+          }
+
+          setAccountAuthNote("Cuenta creada. Revisa tu correo para confirmarla y luego inicia sesion.", "success");
+          setAccountMode("login");
+          if (accountNameInput) accountNameInput.value = "";
+          if (accountConfirmInput) accountConfirmInput.value = "";
+          return;
+        }
+
         const { error } = await supabaseClient.auth.signInWithPassword({
           email,
           password,
@@ -1135,7 +1233,7 @@ const setupAccount = () => {
       } else {
         writeAccount({
           email,
-          name: formatAccountName(email),
+          name: fullName || formatAccountName(email),
           role: email.toLowerCase() === ADMIN_EMAIL ? "admin" : "customer",
         });
       }
@@ -1176,35 +1274,38 @@ const setupAccount = () => {
   }
 
   if (accountRegister) {
-    accountRegister.addEventListener("click", async () => {
-      const email = String(accountEmailInput?.value || "").trim();
-      const password = String(accountPasswordInput?.value || "").trim();
+    accountRegister.addEventListener("click", () => {
+      setAccountAuthNote("");
+      setAccountMode(accountMode === "register" ? "login" : "register");
+    });
+  }
 
-      if (!email || !password) {
-        setAccountAuthNote("Completa correo y contrasena para crear tu cuenta.", "warning");
-        accountEmailInput?.focus();
-        return;
-      }
+  if (accountModeButtons.length) {
+    accountModeButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        setAccountAuthNote("");
+        setAccountMode(button.getAttribute("data-account-mode") || "login");
+      });
+    });
+  }
 
+  if (accountGoogle) {
+    accountGoogle.addEventListener("click", async () => {
       if (!supabaseClient) {
-        setAccountAuthNote("El registro real requiere la conexion con Supabase.", "warning");
+        setAccountAuthNote("El acceso con Google requiere la conexion con Supabase.", "warning");
         return;
       }
 
-      const { error } = await supabaseClient.auth.signUp({
-        email,
-        password,
+      const { error } = await supabaseClient.auth.signInWithOAuth({
+        provider: "google",
         options: {
-          emailRedirectTo: `${window.location.origin}/`,
+          redirectTo: `${window.location.origin}/`,
         },
       });
 
       if (error) {
-        setAccountAuthNote("No pudimos crear la cuenta con esos datos. Prueba con otro correo.", "error");
-        return;
+        setAccountAuthNote("No pudimos iniciar con Google. Revisa que el proveedor este habilitado en Supabase.", "error");
       }
-
-      setAccountAuthNote("Cuenta creada. Revisa tu correo para confirmarla y luego inicia sesion.", "success");
     });
   }
 
@@ -1237,6 +1338,8 @@ const setupAccount = () => {
     closeAccountPanel();
     closeNotificationsPanel();
   });
+
+  setAccountMode("login");
 };
 
 const setupGlobalControlFallbacks = () => {

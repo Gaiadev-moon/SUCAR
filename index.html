@@ -377,9 +377,17 @@
           <button class="account-modal-close" type="button" aria-label="Cerrar inicio de sesion">x</button>
           <span class="eyebrow">Mi cuenta</span>
           <h2 id="account-modal-title">Iniciar sesion</h2>
-          <p>Accede a tu cuenta para ver tus datos, pedidos pendientes y estado del pedido actual.</p>
+          <p id="account-modal-copy">Accede a tu cuenta para ver tus datos, pedidos pendientes y estado del pedido actual.</p>
+          <div class="account-mode-switch" role="tablist" aria-label="Modo de cuenta">
+            <button class="account-mode-chip is-active" type="button" id="account-mode-login" data-account-mode="login">Entrar</button>
+            <button class="account-mode-chip" type="button" id="account-mode-register" data-account-mode="register">Crear cuenta</button>
+          </div>
           <p class="account-auth-note" id="account-auth-note" hidden></p>
           <form class="account-form" id="account-form">
+            <div class="field" id="account-name-field" hidden>
+              <label for="account-name">Nombre de usuario</label>
+              <input id="account-name" name="fullName" type="text" placeholder="Tu nombre o marca" autocomplete="nickname" />
+            </div>
             <div class="field">
               <label for="account-email">Correo electronico</label>
               <input id="account-email" name="email" type="email" placeholder="tuemail@correo.com" autocomplete="email" required />
@@ -388,12 +396,20 @@
               <label for="account-password">Contrasena</label>
               <input id="account-password" name="password" type="password" placeholder="Ingresa tu contrasena" autocomplete="current-password" required />
             </div>
+            <div class="field" id="account-confirm-field" hidden>
+              <label for="account-confirm-password">Confirmar contrasena</label>
+              <input id="account-confirm-password" name="confirmPassword" type="password" placeholder="Repite tu contrasena" autocomplete="new-password" />
+            </div>
             <div class="account-form-actions">
-              <button class="button button-dark account-submit" type="submit">Ingresar</button>
+              <button class="button button-dark account-submit" type="submit" id="account-submit">Ingresar</button>
               <button class="account-inline-link" type="button" id="account-forgot">¿Olvidaste tu contrasena?</button>
             </div>
+            <button class="account-google" type="button" id="account-google">
+              <span class="account-google-mark" aria-hidden="true">G</span>
+              Continuar con Google
+            </button>
             <div class="account-form-meta">
-              <span>No tienes usuario?</span>
+              <span id="account-meta-text">No tienes usuario?</span>
               <button class="account-inline-link" type="button" id="account-register">Registrate</button>
             </div>
           </form>
