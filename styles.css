@@ -2094,10 +2094,35 @@ main section {
 
   .hero-stage,
   .editorial-grid,
-  .product-grid,
   .contact-grid,
   .footer-grid {
     grid-template-columns: 1fr;
+  }
+
+  .product-grid {
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(260px, 78vw);
+    grid-template-columns: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+    align-items: stretch;
+    padding-bottom: 10px;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .product-grid::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .product-grid::-webkit-scrollbar-thumb {
+    background: rgba(234, 123, 44, 0.28);
+    border-radius: 999px;
+  }
+
+  .product-grid .product-card {
+    min-height: 100%;
+    scroll-snap-align: start;
   }
 
   .showcase-card,
