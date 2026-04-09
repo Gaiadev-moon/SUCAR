@@ -573,6 +573,10 @@ main,
   gap: 6px;
 }
 
+.account-form .field[hidden] {
+  display: none !important;
+}
+
 .account-form label {
   font-size: 0.8rem;
   font-weight: 700;
