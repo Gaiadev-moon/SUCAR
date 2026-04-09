@@ -6,7 +6,7 @@ const BANNERS_KEY = "arcarsu-site-banners";
 const ADMIN_EMAIL = "admin@arcarsu.com";
 const WHATSAPP_URL = "https://wa.me/5491100000000";
 const supabaseConfig = window.ARCARSU_SUPABASE_CONFIG || {};
-const supabase =
+const supabaseClient =
   supabaseConfig.url && supabaseConfig.anonKey && window.supabase?.createClient
     ? window.supabase.createClient(supabaseConfig.url, supabaseConfig.anonKey)
     : null;
@@ -275,8 +275,8 @@ const renderNotifications = async () => {
   const account = readAccount();
 
   try {
-    if (supabase && account?.id) {
-      const { data } = await supabase
+    if (supabaseClient && account?.id) {
+      const { data } = await supabaseClient
         .from("notifications")
         .select("id, title, body, kind, read, created_at")
         .order("created_at", { ascending: false })
@@ -335,8 +335,8 @@ const renderSiteBanners = async () => {
   let banners = readBanners();
 
   try {
-    if (supabase) {
-      const { data } = await supabase
+    if (supabaseClient) {
+      const { data } = await supabaseClient
         .from("site_banners")
         .select("slot, eyebrow, title, body, button_label, link, image_url")
         .order("slot", { ascending: true });
@@ -389,8 +389,8 @@ const renderSiteBanners = async () => {
 };
 
 const upsertBanner = async (banner) => {
-  if (supabase) {
-    await supabase.from("site_banners").upsert({
+  if (supabaseClient) {
+    await supabaseClient.from("site_banners").upsert({
       slot: banner.slot,
       eyebrow: banner.eyebrow,
       title: banner.title,
@@ -408,12 +408,12 @@ const upsertBanner = async (banner) => {
 };
 
 const syncAccountFromSupabase = async () => {
-  if (!supabase) return readAccount();
+  if (!supabaseClient) return readAccount();
 
   try {
     const {
       data: { user },
-    } = await supabase.auth.getUser();
+    } = await supabaseClient.auth.getUser();
 
     if (!user) {
       writeAccount(null);
@@ -423,7 +423,7 @@ const syncAccountFromSupabase = async () => {
       return null;
     }
 
-    const { data: profile } = await supabase
+    const { data: profile } = await supabaseClient
       .from("profiles")
       .select("full_name, role, email")
       .eq("id", user.id)
@@ -518,7 +518,7 @@ const createOrderRecord = async (cart, customer) => {
   const account = readAccount();
   const { totalPrice } = getCartTotals(cart);
 
-  if (supabase) {
+  if (supabaseClient) {
     const orderPayload = {
       user_id: account?.id || null,
       customer_name: customer.name,
@@ -531,7 +531,7 @@ const createOrderRecord = async (cart, customer) => {
       total: totalPrice,
     };
 
-    const { data: order, error } = await supabase
+    const { data: order, error } = await supabaseClient
       .from("orders")
       .insert(orderPayload)
       .select("id")
@@ -549,7 +549,7 @@ const createOrderRecord = async (cart, customer) => {
         image_url: item.image,
       }));
 
-      await supabase.from("order_items").insert(itemsPayload);
+      await supabaseClient.from("order_items").insert(itemsPayload);
       return order;
     }
   }
@@ -675,8 +675,8 @@ const renderAdminOrders = async () => {
 
   let orders = readOrders();
 
-  if (supabase) {
-    const { data } = await supabase
+  if (supabaseClient) {
+    const { data } = await supabaseClient
       .from("orders")
       .select(
         "id, created_at, status, total, customer_name, customer_email, customer_phone, delivery, address, city, notes, order_items(product_name, tier, package_quantity, unit_price, subtotal, image_url)"
@@ -759,8 +759,8 @@ const renderAdminProducts = async () => {
 
   let products = readAdminProducts();
 
-  if (supabase) {
-    const { data } = await supabase
+  if (supabaseClient) {
+    const { data } = await supabaseClient
       .from("admin_products")
       .select("id, name, category, material, measure, price_24, price_48, image_url")
       .order("created_at", { ascending: false });
@@ -886,9 +886,9 @@ const setupContactForm = () => {
 const setupAccount = () => {
   renderAccountState();
   renderNotifications();
-  if (supabase) {
+  if (supabaseClient) {
     syncAccountFromSupabase();
-    supabase.auth.onAuthStateChange(() => {
+    supabaseClient.auth.onAuthStateChange(() => {
       syncAccountFromSupabase();
     });
   }
@@ -943,8 +943,8 @@ const setupAccount = () => {
       const password = String(data.get("password") || "").trim();
       if (!email || !password) return;
 
-      if (supabase) {
-        const { error } = await supabase.auth.signInWithPassword({
+      if (supabaseClient) {
+        const { error } = await supabaseClient.auth.signInWithPassword({
           email,
           password,
         });
@@ -976,8 +976,8 @@ const setupAccount = () => {
 
   if (accountLogout) {
     accountLogout.addEventListener("click", async () => {
-      if (supabase) {
-        await supabase.auth.signOut();
+      if (supabaseClient) {
+        await supabaseClient.auth.signOut();
       }
       writeAccount(null);
       closeAccountPanel();
@@ -1213,11 +1213,11 @@ const setupAdmin = () => {
       const index = Number(target.dataset.orderStatus);
       if (Number.isNaN(index)) return;
 
-      if (supabase) {
+      if (supabaseClient) {
         const orderId = target.dataset.orderId;
         if (!orderId) return;
 
-        await supabase.from("orders").update({ status: target.value }).eq("id", orderId);
+        await supabaseClient.from("orders").update({ status: target.value }).eq("id", orderId);
       } else {
         const orders = readOrders();
         const order = orders[index];
@@ -1248,7 +1248,7 @@ const setupAdmin = () => {
         image: String(data.get("image") || "").trim(),
       };
 
-      if (supabase) {
+      if (supabaseClient) {
         const account = readAccount();
         const payload = {
           created_by: account?.id || null,
@@ -1262,9 +1262,9 @@ const setupAdmin = () => {
         };
 
         if (productId) {
-          await supabase.from("admin_products").update(payload).eq("id", productId);
+          await supabaseClient.from("admin_products").update(payload).eq("id", productId);
         } else {
-          await supabase.from("admin_products").insert(payload);
+          await supabaseClient.from("admin_products").insert(payload);
         }
       } else {
         const products = readAdminProducts();
@@ -1322,10 +1322,10 @@ const setupAdmin = () => {
       const button = target.closest("[data-product-delete]");
       if (!(button instanceof HTMLElement)) return;
 
-      if (supabase) {
+      if (supabaseClient) {
         const productId = button.dataset.productId;
         if (!productId) return;
-        await supabase.from("admin_products").delete().eq("id", productId);
+        await supabaseClient.from("admin_products").delete().eq("id", productId);
       } else {
         const index = Number(button.dataset.productDelete);
         if (Number.isNaN(index)) return;
