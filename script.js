@@ -53,6 +53,11 @@ const accountOverlay = document.querySelector("#account-overlay");
 const accountModal = document.querySelector("#account-modal");
 const accountModalClose = document.querySelector(".account-modal-close");
 const accountForm = document.querySelector("#account-form");
+const accountEmailInput = document.querySelector("#account-email");
+const accountPasswordInput = document.querySelector("#account-password");
+const accountAuthNote = document.querySelector("#account-auth-note");
+const accountForgot = document.querySelector("#account-forgot");
+const accountRegister = document.querySelector("#account-register");
 const accountLogout = document.querySelector(".account-logout");
 const accountTriggerText = document.querySelector("[data-account-trigger-text]");
 const accountUser = document.querySelector("[data-account-user]");
@@ -231,6 +236,7 @@ const isAdminAccount = (account) =>
 
 const openAccountModal = () => {
   if (!accountModal || !accountOverlay) return;
+  setAccountAuthNote("");
   accountModal.hidden = false;
   accountOverlay.hidden = false;
   accountModal.setAttribute("aria-hidden", "false");
@@ -239,9 +245,24 @@ const openAccountModal = () => {
 
 const closeAccountModal = () => {
   if (!accountModal || !accountOverlay) return;
+  setAccountAuthNote("");
   accountModal.hidden = true;
   accountOverlay.hidden = true;
   accountModal.setAttribute("aria-hidden", "true");
+};
+
+const setAccountAuthNote = (message, tone = "info") => {
+  if (!accountAuthNote) return;
+  if (!message) {
+    accountAuthNote.hidden = true;
+    accountAuthNote.textContent = "";
+    accountAuthNote.dataset.tone = "";
+    return;
+  }
+
+  accountAuthNote.hidden = false;
+  accountAuthNote.textContent = message;
+  accountAuthNote.dataset.tone = tone;
 };
 
 const openAccountPanel = () => {
@@ -928,6 +949,7 @@ const setupAccount = () => {
 
   if (accountOverlay) {
     accountOverlay.addEventListener("click", () => {
+      setAccountAuthNote("");
       closeAccountModal();
       closeAccountPanel();
       closeNotificationsPanel();
@@ -937,6 +959,7 @@ const setupAccount = () => {
   if (accountForm) {
     accountForm.addEventListener("submit", async (event) => {
       event.preventDefault();
+      setAccountAuthNote("");
 
       const data = new FormData(accountForm);
       const email = String(data.get("email") || "").trim();
@@ -950,9 +973,7 @@ const setupAccount = () => {
         });
 
         if (error) {
-          if (formNote) {
-            formNote.textContent = "No se pudo iniciar sesion con Supabase.";
-          }
+          setAccountAuthNote("No se pudo iniciar sesion. Revisa tus datos e intenta nuevamente.", "error");
           return;
         }
 
@@ -966,11 +987,70 @@ const setupAccount = () => {
       }
 
       accountForm.reset();
+      setAccountAuthNote("");
       closeAccountModal();
       renderAccountState();
       await renderNotifications();
       await renderAdminPage();
       openAccountPanel();
+    });
+  }
+
+  if (accountForgot) {
+    accountForgot.addEventListener("click", async () => {
+      const email = String(accountEmailInput?.value || "").trim();
+      if (!email) {
+        setAccountAuthNote("Ingresa tu correo para enviarte el enlace de recuperacion.", "warning");
+        accountEmailInput?.focus();
+        return;
+      }
+
+      if (!supabaseClient) {
+        setAccountAuthNote("La recuperacion por correo requiere la conexion con Supabase.", "warning");
+        return;
+      }
+
+      const redirectTo = `${window.location.origin}/`;
+      const { error } = await supabaseClient.auth.resetPasswordForEmail(email, { redirectTo });
+      if (error) {
+        setAccountAuthNote("No pudimos enviar el correo de recuperacion. Intenta otra vez.", "error");
+        return;
+      }
+
+      setAccountAuthNote("Te enviamos un correo para recuperar tu contrasena.", "success");
+    });
+  }
+
+  if (accountRegister) {
+    accountRegister.addEventListener("click", async () => {
+      const email = String(accountEmailInput?.value || "").trim();
+      const password = String(accountPasswordInput?.value || "").trim();
+
+      if (!email || !password) {
+        setAccountAuthNote("Completa correo y contrasena para crear tu cuenta.", "warning");
+        accountEmailInput?.focus();
+        return;
+      }
+
+      if (!supabaseClient) {
+        setAccountAuthNote("El registro real requiere la conexion con Supabase.", "warning");
+        return;
+      }
+
+      const { error } = await supabaseClient.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/`,
+        },
+      });
+
+      if (error) {
+        setAccountAuthNote("No pudimos crear la cuenta con esos datos. Prueba con otro correo.", "error");
+        return;
+      }
+
+      setAccountAuthNote("Cuenta creada. Revisa tu correo para confirmarla y luego inicia sesion.", "success");
     });
   }
 
@@ -998,6 +1078,7 @@ const setupAccount = () => {
 
   document.addEventListener("keydown", (event) => {
     if (event.key !== "Escape") return;
+    setAccountAuthNote("");
     closeAccountModal();
     closeAccountPanel();
     closeNotificationsPanel();

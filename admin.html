@@ -250,16 +250,24 @@
           <span class="eyebrow">Mi cuenta</span>
           <h2 id="account-modal-title">Iniciar sesion</h2>
           <p>Ingresa con la cuenta administradora habilitada para acceder al panel.</p>
+          <p class="account-auth-note" id="account-auth-note" hidden></p>
           <form class="account-form" id="account-form">
             <div class="field">
               <label for="account-email">Correo electronico</label>
-              <input id="account-email" name="email" type="email" placeholder="tuemail@correo.com" required />
+              <input id="account-email" name="email" type="email" placeholder="tuemail@correo.com" autocomplete="email" required />
             </div>
             <div class="field">
               <label for="account-password">Contrasena</label>
-              <input id="account-password" name="password" type="password" placeholder="Ingresa tu contrasena" required />
+              <input id="account-password" name="password" type="password" placeholder="Ingresa tu contrasena" autocomplete="current-password" required />
             </div>
-            <button class="button button-dark" type="submit">Ingresar</button>
+            <div class="account-form-actions">
+              <button class="button button-dark account-submit" type="submit">Ingresar</button>
+              <button class="account-inline-link" type="button" id="account-forgot">¿Olvidaste tu contrasena?</button>
+            </div>
+            <div class="account-form-meta">
+              <span>No tienes usuario?</span>
+              <button class="account-inline-link" type="button" id="account-register">Registrate</button>
+            </div>
           </form>
         </div>
       </div>
